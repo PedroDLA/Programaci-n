@@ -49,10 +49,9 @@ public class Tienda {
 	}	
 	
 
-	public void RegistrarCliente(Cliente cliente) {
-		Cliente clientes = null;
-		int i;
-		int u;
+	public void RegistrarCliente(String nombre, String cedula, int numero ) {
+		Cliente cliente = new Cliente(nombre, cedula, numero);
+		misClientes.add(cliente);
 	}
 	
 		public Cliente ClienteByCedula(String cedula) {
