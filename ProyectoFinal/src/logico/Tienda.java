@@ -2,6 +2,8 @@ package logico;
 
 import java.util.ArrayList;
 
+
+
 public class Tienda {
 	private ArrayList<Componente>misComponentes;
 	private ArrayList<Cliente>misClientes;
@@ -46,13 +48,25 @@ public class Tienda {
 		this.misFacturas = misFacturas;
 	}	
 	
+
 	public void RegistrarCliente(Cliente cliente) {
 		Cliente clientes = null;
 		int i;
 		int u;
 	}
 	
-	
+		public Cliente ClienteByCedula(String cedula) {
+		
+		for (Cliente cliente : misClientes) {
+			if (cliente.getCedula().equalsIgnoreCase(cedula)) {
+				 return cliente;
+			}
+		}
+		
+		return null;
+		
+		
+	}
 	
 	
 	
