@@ -2,8 +2,31 @@ package logico;
 
 public class MemoriaRam extends Componente {
 
-	public MemoriaRam() {
-		// TODO Auto-generated constructor stub
+	private int capacidad;
+	private String tipo;
+	
+	public MemoriaRam(String numSerie, int stock, float precio, String modelo, String marca, int capacidad,
+			String tipo) {
+		super(numSerie, stock, precio, modelo, marca);
+		this.capacidad = capacidad;
+		this.tipo = tipo;
 	}
+
+	public int getCapacidad() {
+		return capacidad;
+	}
+
+	public void setCapacidad(int capacidad) {
+		this.capacidad = capacidad;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+	
 
 }
