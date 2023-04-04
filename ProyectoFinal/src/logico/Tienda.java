@@ -44,16 +44,10 @@ public class Tienda {
 
 	public void setMisFacturas(ArrayList<Factura> misFacturas) {
 		this.misFacturas = misFacturas;
-	}
+	}	
 	
-	public Cliente ClienteByCodigo(String codigo) {
-		Cliente cliente = null;
-		
-		return cliente;
-		
-	}
-	public void RegistrarCliente(Cliente) {
-		
+	public void RegistrarCliente(Cliente cliente) {
+		Cliente clientes = null;
 		
 	}
 	
@@ -62,9 +56,20 @@ public class Tienda {
 	
 	
 	
-	System.out.println("mmg pedro        ");
 	
-	System.out.println("mmg pedro SAmuel pajaro    ");
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
