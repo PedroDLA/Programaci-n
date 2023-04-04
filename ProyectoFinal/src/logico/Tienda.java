@@ -48,6 +48,7 @@ public class Tienda {
 	
 	public void RegistrarCliente(Cliente cliente) {
 		Cliente clientes = null;
+		int i;
 		
 	}
 	
