@@ -46,9 +46,16 @@ public class Tienda {
 
 	public void setMisFacturas(ArrayList<Factura> misFacturas) {
 		this.misFacturas = misFacturas;
+	}	
+	
+
+	public void RegistrarCliente(Cliente cliente) {
+		Cliente clientes = null;
+		int i;
+		int u;
 	}
 	
-	public Cliente ClienteByCedula(String cedula) {
+		public Cliente ClienteByCedula(String cedula) {
 		
 		for (Cliente cliente : misClientes) {
 			if (cliente.getCedula().equalsIgnoreCase(cedula)) {
@@ -60,5 +67,36 @@ public class Tienda {
 		
 		
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }
