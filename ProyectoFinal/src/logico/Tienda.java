@@ -50,5 +50,14 @@ public class Tienda {
 		Cliente cliente = null;
 		
 		return cliente;
+		
 	}
+		
+		
+	public void RegistrarCliente(Cliente) {
+		
+		
+	}
+	
+	
 }
