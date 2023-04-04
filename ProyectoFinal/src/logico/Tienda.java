@@ -45,5 +45,10 @@ public class Tienda {
 	public void setMisFacturas(ArrayList<Factura> misFacturas) {
 		this.misFacturas = misFacturas;
 	}
-
+	
+	public Cliente ClienteByCodigo(String codigo) {
+		Cliente cliente = null;
+		
+		return cliente;
+	}
 }
