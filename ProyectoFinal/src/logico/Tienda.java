@@ -52,12 +52,31 @@ public class Tienda {
 		return cliente;
 		
 	}
-		
-		
 	public void RegistrarCliente(Cliente) {
 		
 		
 	}
+	
+	
+	
+	
+	
+	
+	System.out.println("mmg pedro");
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }
