@@ -64,7 +64,7 @@ public class Tienda {
 	
 	System.out.println("mmg pedro        ");
 	
-	System.out.println("mmg pedro        ");
+	System.out.println("mmg pedro SAmuel pajaro        ");
 	
 	
 	
