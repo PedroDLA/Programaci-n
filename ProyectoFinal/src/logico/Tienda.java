@@ -54,18 +54,18 @@ public class Tienda {
 		misClientes.add(cliente);
 	}
 	
-		public Cliente ClienteByCedula(String cedula) {
-		
+	public Cliente ClienteByCedula(String cedula) {
+
 		for (Cliente cliente : misClientes) {
 			if (cliente.getCedula().equalsIgnoreCase(cedula)) {
-				 return cliente;
+				return cliente;
 			}
 		}
-		
+
 		return null;
-		
-		
 	}
+		
+	
 	
 	
 	
