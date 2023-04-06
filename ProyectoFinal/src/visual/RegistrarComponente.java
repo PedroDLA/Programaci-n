@@ -26,7 +26,7 @@ import javax.swing.JRadioButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class regQueso extends JDialog {
+public class RegistrarComponente extends JDialog {
 
 	/**
 	 * 
@@ -53,7 +53,7 @@ public class regQueso extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			regQueso dialog = new regQueso();
+			RegistrarComponente dialog = new RegistrarComponente();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -64,7 +64,7 @@ public class regQueso extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public regQueso() {
+	public RegistrarComponente() {
 		setBounds(100, 100, 778, 609);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -238,7 +238,7 @@ public class regQueso extends JDialog {
 				JButton okButton = new JButton("Registrar");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						Queso aux = null;
+						/*Queso aux = null;
 						String codigo = textcodigo.getText();
 
 						float precio = Float.valueOf(spnPrecio.getValue().toString());
@@ -260,7 +260,7 @@ public class regQueso extends JDialog {
 						}
 						TiendaQueso.getInstance().insertarQueso(aux);
 						JOptionPane.showMessageDialog(null, "Operacion Exitosa", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-						clean();
+						clean();*/
 					}
 
 				});

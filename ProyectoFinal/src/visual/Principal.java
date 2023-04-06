@@ -57,7 +57,7 @@ public class Principal extends JFrame {
 		JMenuItem mntmRegComp = new JMenuItem("Registrar Componente");
 		mntmRegComp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				regQueso regQ = new regQueso();
+				RegistrarComponente regQ = new RegistrarComponente();
 				regQ.setModal(true);
 				regQ.setVisible(true);
 			}
