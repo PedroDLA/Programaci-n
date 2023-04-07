@@ -16,7 +16,7 @@ public abstract class Componente {
 		this.marca = marca;
 	}
 
-	public static String getNumSerie() {
+	public String getNumSerie() {
 		return numSerie;
 	}
 

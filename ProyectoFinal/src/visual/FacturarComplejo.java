@@ -25,11 +25,13 @@ import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.JTextField;
 
 public class FacturarComplejo extends JDialog {
 
@@ -37,12 +39,18 @@ public class FacturarComplejo extends JDialog {
 	private JTable table;
 	private static DefaultTableModel model;
 	private static Object rows[];
-	private JComboBox comboBox;
-	private JButton btnUpdate;
 	private JButton btnDelete;
 	private JButton btnCancelar;
 	private String tipo;
 	private Componente selected = null;
+	private JTextField CedulatextField;
+	private JTextField NombretextField;
+	private JTextField TelefonotextField;
+	private JTextField DirtextField;
+	private JTextField SerietextField;
+	private JTextField textField;
+	private ArrayList<Componente> componentesFactura = null;
+	private static int cantidad = 1;
 	/**
 	 * Launch the application.
 	 */
@@ -59,37 +67,13 @@ public class FacturarComplejo extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	@SuppressWarnings("rawtypes")
 	public FacturarComplejo() {
-		setBounds(100, 100, 852, 503);
+		setBounds(100, 100, 1046, 503);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new BorderLayout(0, 0));
-		
-		{
-			JPanel panel = new JPanel();
-			panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			contentPanel.add(panel, BorderLayout.NORTH);
-			panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 15));
-			{
-				JLabel lblTipoDeQueso = new JLabel("Tipo de Componente:");
-				lblTipoDeQueso.setHorizontalAlignment(SwingConstants.LEFT);
-				panel.add(lblTipoDeQueso);
-			}
-			{
-				comboBox = new JComboBox();
-				comboBox.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						load(comboBox.getSelectedIndex());
-						
-					}
-				});
-				comboBox.setModel(new DefaultComboBoxModel(new String[] {"<Todos>", "MotherBoards", "Microprocesadores", "Memorias RAM", "Discos Duros"}));
-				panel.add(comboBox);
-			}
-		}
 		{
 			JPanel panel = new JPanel();
 			panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -97,11 +81,11 @@ public class FacturarComplejo extends JDialog {
 			panel.setLayout(null);
 			{
 				JScrollPane scrollPane = new JScrollPane();
-				scrollPane.setBounds(1, 1, 840, 361);
+				scrollPane.setBounds(1, 137, 1023, 241);
 				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 				panel.add(scrollPane);
 				{
-					String[] headers = {"Numero de serie","Marca","Modelo", "Cantidad", "Precio", "Tipo de Componente"};
+					String[] headers = {"Numero de serie","Tipo de Componente","Marca","Modelo", "Stock","Cantidad", "Precio", "Subtotal" };
 					
 					table = new JTable();
 					table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -111,8 +95,8 @@ public class FacturarComplejo extends JDialog {
 							int ind = table.getSelectedRow();
 							if (ind >= 0 ) {
 								btnDelete.setEnabled(true);
-								btnUpdate.setEnabled(true);
 								String codigo = table.getValueAt(ind, 0).toString();
+								cantidad = (int) table.getValueAt(ind, 5);
 								 selected = Tienda.getInstance().ComponenteByCodigo(codigo);
 							}
 						}
@@ -122,6 +106,100 @@ public class FacturarComplejo extends JDialog {
 					table.setModel(model);
 
 				}
+			}
+			{
+				JPanel panel_1 = new JPanel();
+				panel_1.setLayout(null);
+				panel_1.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+				panel_1.setBounds(29, 12, 995, 122);
+				panel.add(panel_1);
+				{
+					JLabel lblCdula = new JLabel("Cédula:");
+					lblCdula.setBounds(10, 11, 89, 14);
+					panel_1.add(lblCdula);
+				}
+				{
+					CedulatextField = new JTextField();
+					CedulatextField.setColumns(10);
+					CedulatextField.setBounds(76, 7, 216, 23);
+					panel_1.add(CedulatextField);
+				}
+				{
+					JButton btnBuscar = new JButton("Buscar");
+					btnBuscar.setBounds(355, 7, 89, 23);
+					panel_1.add(btnBuscar);
+				}
+				{
+					JLabel lblNombre = new JLabel("Nombre:");
+					lblNombre.setBounds(10, 45, 79, 14);
+					panel_1.add(lblNombre);
+				}
+				{
+					NombretextField = new JTextField();
+					NombretextField.setEditable(false);
+					NombretextField.setColumns(10);
+					NombretextField.setBounds(76, 37, 162, 23);
+					panel_1.add(NombretextField);
+				}
+				{
+					JLabel lblTelfono = new JLabel("Teléfono:");
+					lblTelfono.setBounds(256, 42, 75, 14);
+					panel_1.add(lblTelfono);
+				}
+				{
+					TelefonotextField = new JTextField();
+					TelefonotextField.setEditable(false);
+					TelefonotextField.setColumns(10);
+					TelefonotextField.setBounds(329, 41, 115, 23);
+					panel_1.add(TelefonotextField);
+				}
+				{
+					JLabel lblDireccin = new JLabel("Dirección:");
+					lblDireccin.setBounds(10, 81, 89, 14);
+					panel_1.add(lblDireccin);
+				}
+				{
+					DirtextField = new JTextField();
+					DirtextField.setEditable(false);
+					DirtextField.setColumns(10);
+					DirtextField.setBounds(86, 71, 357, 23);
+					panel_1.add(DirtextField);
+				}
+				{
+					JLabel lblNuemroDeSerie = new JLabel("Numero de serie:");
+					lblNuemroDeSerie.setBounds(486, 45, 136, 14);
+					panel_1.add(lblNuemroDeSerie);
+				}
+				{
+					SerietextField = new JTextField();
+					SerietextField.setColumns(10);
+					SerietextField.setBounds(483, 73, 178, 23);
+					panel_1.add(SerietextField);
+				}
+				{
+					JButton btnAnadir = new JButton("Ingresar");
+					btnAnadir.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							String serie = SerietextField.getText();
+							Componente componente = Tienda.getInstance().ComponenteByCodigo(serie);
+							componentesFactura.add(componente);
+						}
+					});
+					btnAnadir.setBounds(673, 72, 104, 23);
+					panel_1.add(btnAnadir);
+				}
+			}
+			{
+				JLabel lblTotal = new JLabel("Total:");
+				lblTotal.setBounds(629, 394, 46, 14);
+				panel.add(lblTotal);
+			}
+			{
+				textField = new JTextField();
+				textField.setEditable(false);
+				textField.setColumns(10);
+				textField.setBounds(676, 390, 115, 23);
+				panel.add(textField);
 			}
 		}
 		{
@@ -136,32 +214,25 @@ public class FacturarComplejo extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						if (selected != null) {
 							int option = JOptionPane.showConfirmDialog(null,
-									"Estas seguro de querer eliminar el Companente",
+									"Estas seguro de querer eliminar el Companente de la factura?",
 									"Eliminar Componente", JOptionPane.OK_CANCEL_OPTION);
 							if(option == JOptionPane.OK_OPTION) {
-								Tienda.getInstance().eliminarComponente(selected);
-								load(0);
+								componentesFactura.remove(selected);
+								load();
 							}
 						}
 					}
 				});
+				{
+					JButton btnLimpiar = new JButton("Limpiar");
+					btnLimpiar.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							componentesFactura.clear();
+						}
+					});
+					buttonPane.add(btnLimpiar);
+				}
 				buttonPane.add(btnDelete);
-			}
-			
-			{
-				btnUpdate = new JButton("Modificar");
-				btnUpdate.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						ModificarComponente list = new ModificarComponente(selected);
-						list.setModal(true);
-						list.setVisible(true);
-					}
-				});
-				
-				btnUpdate.setActionCommand("OK");
-				buttonPane.add(btnUpdate);
-				getRootPane().setDefaultButton(btnUpdate);
 			}
 			
 			{
@@ -175,89 +246,48 @@ public class FacturarComplejo extends JDialog {
 				buttonPane.add(btnCancelar);
 			}
 		}
-		load(0);
+		load();
+		
 	}
 
-	public static void load(int index) {
+	public static void load() {
 		model.setRowCount(0);
 		rows = new Object[model.getColumnCount()];
-		if(index == 0){
+		
 			for (Componente aux : Tienda.getInstance().getMisComponentes()) {
 				
 				rows[0] = aux.getNumSerie();
-				rows[1] = aux.getMarca();
-				rows[2] = aux.getModelo();
-				rows[3] = aux.getStock();
-				rows[4] = aux.getPrecio();
+				rows[2] = aux.getMarca();
+				rows[3] = aux.getModelo();
+				rows[4] = aux.getStock();
+				rows[5] = cantidad;
+				rows[6] = aux.getPrecio();
+				rows[7] = aux.getPrecio()*cantidad;
 				if(aux instanceof DiscoDuro ){
-					rows[3] = "Disco Duro";	
+					rows[1] = "Disco Duro";	
 				}
 				if(aux instanceof MemoriaRam){
-					rows[3] = "Memoria Ram";	
+					rows[1] = "Memoria Ram";	
 				}
 				if(aux instanceof Micro ){
-					rows[3] = "Microprocesador";
+					rows[1] = "Microprocesador";
 				}
 				if(aux instanceof Motherboard ){
-					rows[3] = "MotherBoard";
+					rows[1] = "MotherBoard";
 				}
 				model.addRow(rows);
 			  
 			}
-		}
 		
-		if(index == 1){
-			for (Componente aux : Tienda.getInstance().getMisComponentes()) {
-				if(aux instanceof Motherboard){
-					rows[0] = aux.getNumSerie();
-					rows[1] = aux.getMarca();
-					rows[2] = aux.getModelo();
-					rows[3] = aux.getStock();
-					rows[4] = aux.getPrecio();
-					rows[5] = "MotherBoard";	
-					model.addRow(rows);
-				}
-			}	
-		}
-		if(index == 2){
-			for (Componente aux : Tienda.getInstance().getMisComponentes()) {
-				if(aux instanceof Micro){
-					rows[0] = aux.getNumSerie();
-					rows[1] = aux.getMarca();
-					rows[2] = aux.getModelo();
-					rows[3] = aux.getStock();
-					rows[4] = aux.getPrecio();
-					rows[5] = "Miroprocesador";	
-					model.addRow(rows);
-				}
-			}	
-		}
-		if(index==3){
-			for (Componente aux : Tienda.getInstance().getMisComponentes()) {
-				if(aux instanceof MemoriaRam){
-					rows[0] = aux.getNumSerie();
-					rows[1] = aux.getMarca();
-					rows[2] = aux.getModelo();
-					rows[3] = aux.getStock();
-					rows[4] = aux.getPrecio();
-					rows[5] = "Memoria Ram";	
-					model.addRow(rows);
-				}
-			}	
-		}
-		if(index==4){
-			for (Componente aux : Tienda.getInstance().getMisComponentes()) {
-				if(aux instanceof DiscoDuro){
-					rows[0] = aux.getNumSerie();
-					rows[1] = aux.getMarca();
-					rows[2] = aux.getModelo();
-					rows[3] = aux.getStock();
-					rows[4] = aux.getPrecio();
-					rows[5] = "Disco Duro";	
-					model.addRow(rows);
-				}
-			}	
-		}
-	}
+		
+	}	
+	
 
+
+	
+	
+	
+	
 }
+
+
