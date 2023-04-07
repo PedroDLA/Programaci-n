@@ -79,7 +79,7 @@ public class Principal extends JFrame {
 		JMenuItem mntmFacturar = new JMenuItem("Facturar");
 		mntmFacturar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Facturar factura = new Facturar();
+				FacturarComplejo factura = new FacturarComplejo();
 				factura.setModal(true);
 				factura.setVisible(true);
 			}

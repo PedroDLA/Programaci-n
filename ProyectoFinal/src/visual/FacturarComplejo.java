@@ -49,8 +49,9 @@ public class FacturarComplejo extends JDialog {
 	private JTextField DirtextField;
 	private JTextField SerietextField;
 	private JTextField textField;
-	private ArrayList<Componente> componentesFactura = null;
+	private static ArrayList<Componente> componentesFactura = null;
 	private static int cantidad = 1;
+	private int in = 0;
 	/**
 	 * Launch the application.
 	 */
@@ -96,7 +97,7 @@ public class FacturarComplejo extends JDialog {
 							if (ind >= 0 ) {
 								btnDelete.setEnabled(true);
 								String codigo = table.getValueAt(ind, 0).toString();
-								cantidad = (int) table.getValueAt(ind, 5);
+								
 								 selected = Tienda.getInstance().ComponenteByCodigo(codigo);
 							}
 						}
@@ -183,6 +184,9 @@ public class FacturarComplejo extends JDialog {
 							String serie = SerietextField.getText();
 							Componente componente = Tienda.getInstance().ComponenteByCodigo(serie);
 							componentesFactura.add(componente);
+							//cantidad = (int) table.getValueAt(componentesFactura.indexOf(componente), 5);
+							
+							load();
 						}
 					});
 					btnAnadir.setBounds(673, 72, 104, 23);
@@ -201,6 +205,21 @@ public class FacturarComplejo extends JDialog {
 				textField.setBounds(676, 390, 115, 23);
 				panel.add(textField);
 			}
+			{
+				JButton btnLimpiar = new JButton("+");
+				btnLimpiar.setBounds(326, 389, 44, 25);
+				panel.add(btnLimpiar);
+			}
+			{
+				JButton btnLimpiar = new JButton("-");
+				btnLimpiar.setBounds(264, 389, 44, 25);
+				panel.add(btnLimpiar);
+			}
+			{
+				JLabel lblNuemroDeSerie = new JLabel("Cantidad por articulo:");
+				lblNuemroDeSerie.setBounds(81, 394, 167, 14);
+				panel.add(lblNuemroDeSerie);
+			}
 		}
 		{
 			
@@ -218,6 +237,7 @@ public class FacturarComplejo extends JDialog {
 									"Eliminar Componente", JOptionPane.OK_CANCEL_OPTION);
 							if(option == JOptionPane.OK_OPTION) {
 								componentesFactura.remove(selected);
+								
 								load();
 							}
 						}
@@ -230,6 +250,10 @@ public class FacturarComplejo extends JDialog {
 							componentesFactura.clear();
 						}
 					});
+					{
+						JButton btnFacturar = new JButton("Facturar");
+						buttonPane.add(btnFacturar);
+					}
 					buttonPane.add(btnLimpiar);
 				}
 				buttonPane.add(btnDelete);
@@ -246,7 +270,6 @@ public class FacturarComplejo extends JDialog {
 				buttonPane.add(btnCancelar);
 			}
 		}
-		load();
 		
 	}
 
@@ -254,7 +277,7 @@ public class FacturarComplejo extends JDialog {
 		model.setRowCount(0);
 		rows = new Object[model.getColumnCount()];
 		
-			for (Componente aux : Tienda.getInstance().getMisComponentes()) {
+			for (Componente aux : componentesFactura) {
 				
 				rows[0] = aux.getNumSerie();
 				rows[2] = aux.getMarca();

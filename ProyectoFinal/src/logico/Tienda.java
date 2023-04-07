@@ -68,51 +68,21 @@ public class Tienda {
 	}
 	
 	public Componente ComponenteByCodigo(String codigo) {
-
+		
+		Componente prueba = null;
 		for (Componente componente : misComponentes) {
 			if (componente.getNumSerie().equalsIgnoreCase(codigo)) {
-				return componente;
+				System.out.println(componente.getNumSerie());
+				prueba = componente;
 			}
 		}
-
-		return null;
+		System.out.println("MMMMMMMMMMGGGGGGGGGGGGGG");
+		return prueba;
 	}
 
 	public void eliminarComponente(Componente selected) {
 		misComponentes.remove(selected);
 	}
-		
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 }

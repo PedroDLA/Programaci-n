@@ -189,16 +189,16 @@ public class ListadoComponentes extends JDialog {
 				rows[3] = aux.getStock();
 				rows[4] = aux.getPrecio();
 				if(aux instanceof DiscoDuro ){
-					rows[3] = "Disco Duro";	
+					rows[5] = "Disco Duro";	
 				}
 				if(aux instanceof MemoriaRam){
-					rows[3] = "Memoria Ram";	
+					rows[5] = "Memoria Ram";	
 				}
 				if(aux instanceof Micro ){
-					rows[3] = "Microprocesador";
+					rows[5] = "Microprocesador";
 				}
 				if(aux instanceof Motherboard ){
-					rows[3] = "MotherBoard";
+					rows[5] = "MotherBoard";
 				}
 				model.addRow(rows);
 			  
