@@ -30,8 +30,15 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.JTextPane;
+import java.awt.Color;
+import java.awt.SystemColor;
+import javax.swing.UIManager;
+import javax.swing.JTextField;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
 
-public class ListadoComponentes extends JDialog {
+public class Combo extends JDialog {
 
 	/**
 	 * 
@@ -42,8 +49,7 @@ public class ListadoComponentes extends JDialog {
 	private static DefaultTableModel model;
 	private static Object rows[];
 	private JComboBox<String> comboBox;
-	private JButton btnUpdate;
-	private JButton btnDelete;
+	private JButton btnCrear;
 	private JButton btnCancelar;
 	private String tipo;
 	private Componente selected = null;
@@ -52,7 +58,7 @@ public class ListadoComponentes extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			ListadoComponentes dialog = new ListadoComponentes();
+			Combo dialog = new Combo();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -64,8 +70,8 @@ public class ListadoComponentes extends JDialog {
 	 * Create the dialog.
 	 */
 	@SuppressWarnings("rawtypes")
-	public ListadoComponentes() {
-		setBounds(100, 100, 852, 345);
+	public Combo() {
+		setBounds(100, 100, 1120, 724);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -98,11 +104,12 @@ public class ListadoComponentes extends JDialog {
 			JPanel panel = new JPanel();
 			panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			contentPanel.add(panel, BorderLayout.CENTER);
-			panel.setLayout(new BorderLayout(0, 0));
+			panel.setLayout(null);
 			{
 				JScrollPane scrollPane = new JScrollPane();
+				scrollPane.setBounds(0, 13, 822, 218);
 				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-				panel.add(scrollPane, BorderLayout.CENTER);
+				panel.add(scrollPane);
 				{
 					String[] headers = {"Numero de serie","Marca","Modelo", "Cantidad", "Precio", "Tipo de Componente"};
 					
@@ -113,8 +120,7 @@ public class ListadoComponentes extends JDialog {
 						public void mouseClicked(MouseEvent e) {
 							int ind = table.getSelectedRow();
 							if (ind >= 0 ) {
-								btnDelete.setEnabled(true);
-								btnUpdate.setEnabled(true);
+								btnCrear.setEnabled(true);
 								String codigo = table.getValueAt(ind, 0).toString();
 								 selected = Tienda.getInstance().ComponenteByCodigo(codigo);
 							}
@@ -126,6 +132,39 @@ public class ListadoComponentes extends JDialog {
 
 				}
 			}
+			
+			JButton btnAgregar = new JButton("Agregar");
+			btnAgregar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					
+				}
+			});
+			btnAgregar.setBounds(349, 234, 97, 25);
+			panel.add(btnAgregar);
+			
+			JScrollPane scrollPane = new JScrollPane();
+			scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+			scrollPane.setBounds(0, 261, 822, 212);
+			panel.add(scrollPane);
+			
+			JPanel pnlAgregar = new JPanel();
+			pnlAgregar.setBackground(SystemColor.info);
+			pnlAgregar.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Cantidad...", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			pnlAgregar.setBounds(839, 109, 229, 172);
+			panel.add(pnlAgregar);
+			pnlAgregar.setLayout(null);
+			
+			JTextPane txtpnAviso = new JTextPane();
+			txtpnAviso.setEditable(false);
+			txtpnAviso.setText("Cu\u00E1ntos art\u00EDculos deseas a\u00F1adir al combo?\r\n\r\nNo deben exceder la cantidad actual en existencia!");
+			txtpnAviso.setBackground(SystemColor.info);
+			txtpnAviso.setBounds(12, 32, 179, 86);
+			pnlAgregar.add(txtpnAviso);
+			
+			JSpinner spinner = new JSpinner();
+			spinner.setModel(new SpinnerNumberModel(new Integer(1), new Integer(1), null, new Integer(1)));
+			spinner.setBounds(63, 131, 95, 22);
+			pnlAgregar.add(spinner);
 		}
 		{
 			
@@ -133,27 +172,10 @@ public class ListadoComponentes extends JDialog {
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				btnDelete = new JButton("Eliminar");
-				btnDelete.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						if (selected != null) {
-							int option = JOptionPane.showConfirmDialog(null,
-									"Estas seguro de querer eliminar el Companente",
-									"Eliminar Componente", JOptionPane.OK_CANCEL_OPTION);
-							if(option == JOptionPane.OK_OPTION) {
-								Tienda.getInstance().eliminarComponente(selected);
-								load(0);
-							}
-						}
-					}
-				});
-				buttonPane.add(btnDelete);
-			}
 			
 			{
-				btnUpdate = new JButton("Modificar");
-				btnUpdate.addMouseListener(new MouseAdapter() {
+				btnCrear = new JButton("Crear");
+				btnCrear.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						ModificarComponente list = new ModificarComponente(selected);
@@ -162,9 +184,9 @@ public class ListadoComponentes extends JDialog {
 					}
 				});
 				
-				btnUpdate.setActionCommand("OK");
-				buttonPane.add(btnUpdate);
-				getRootPane().setDefaultButton(btnUpdate);
+				btnCrear.setActionCommand("OK");
+				buttonPane.add(btnCrear);
+				getRootPane().setDefaultButton(btnCrear);
 			}
 			
 			{
@@ -262,5 +284,4 @@ public class ListadoComponentes extends JDialog {
 			}	
 		}
 	}
-
 }
