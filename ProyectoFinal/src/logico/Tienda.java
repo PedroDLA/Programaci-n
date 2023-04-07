@@ -2,12 +2,11 @@ package logico;
 
 import java.util.ArrayList;
 
-
-
 public class Tienda {
 	private ArrayList<Componente>misComponentes;
 	private ArrayList<Cliente>misClientes;
 	private ArrayList<Factura>misFacturas;
+	public static int serial = 1;
 	public static Tienda tienda=null;
 	
 	private Tienda() {
@@ -48,7 +47,10 @@ public class Tienda {
 		this.misFacturas = misFacturas;
 	}	
 	
-
+	public void RegComponente(Componente comp){
+		misComponentes.add(comp);
+		serial++;
+	}
 	public void RegistrarCliente(String nombre, String cedula, int numero ) {
 		Cliente cliente = new Cliente(nombre, cedula, numero);
 		misClientes.add(cliente);
