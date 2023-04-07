@@ -92,9 +92,7 @@ public class Principal extends JFrame {
 		JMenuItem mntmComponentesVendidos = new JMenuItem("Componentes Vendidos");
 		mntmComponentesVendidos.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				VentaQuesos venta = new VentaQuesos();
-				venta.setModal(true);
-				venta.setVisible(true);
+				
 			}
 		});
 		mmAdministrador.add(mntmComponentesVendidos);
@@ -102,18 +100,14 @@ public class Principal extends JFrame {
 		JMenuItem mntmListadoFacturas = new JMenuItem("Listado Facturas");
 		mntmListadoFacturas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ListadoFactura factura = new ListadoFactura();
-				factura.setModal(true);
-				factura.setVisible(true);
+				
 			}
 		});
 		
 		JMenuItem mntmDetalleVentas = new JMenuItem("Detalle Ventas");
 		mntmDetalleVentas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				VentaDetalle detalle = new VentaDetalle();
-				detalle.setModal(true);
-				detalle.setVisible(true);
+				
 			}
 		});
 		mmAdministrador.add(mntmDetalleVentas);

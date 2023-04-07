@@ -4,10 +4,10 @@ public class Motherboard extends Componente {
 
 	private String socket;
 	private String tipo;
-	private String[] conexiones;
+	private String conexiones;
 	
 	public Motherboard(String numSerie, int stock, float precio, String modelo, String marca, String socket,
-			String tipo, String[] conexiones) {
+			String tipo, String conexiones) {
 		super(numSerie, stock, precio, modelo, marca);
 		this.socket = socket;
 		this.tipo = tipo;
@@ -30,11 +30,11 @@ public class Motherboard extends Componente {
 		this.tipo = tipo;
 	}
 
-	public String[] getConexiones() {
+	public String getConexiones() {
 		return conexiones;
 	}
 
-	public void setConexiones(String[] conexiones) {
+	public void setConexiones(String conexiones) {
 		this.conexiones = conexiones;
 	}
 	

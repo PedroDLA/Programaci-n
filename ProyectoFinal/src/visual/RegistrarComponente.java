@@ -1,34 +1,32 @@
 package visual;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import logico.Componente;
 import logico.DiscoDuro;
 import logico.MemoriaRam;
-import logico.Motherboard;
 import logico.Micro;
+import logico.Motherboard;
 import logico.Tienda;
-
-import javax.swing.UIManager;
-import java.awt.Color;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.JRadioButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.Panel;
 
 public class RegistrarComponente extends JDialog {
 
@@ -46,17 +44,13 @@ public class RegistrarComponente extends JDialog {
 	private JRadioButton rdbDiscoDuro;
 	private JRadioButton rdbMotherBoard;
 	private JRadioButton rdbMemoriaRam;
-	
-	private JPanel pnlMotherBoard;
-	private JPanel pnlMicro;
-	private JPanel pnlDiscoDuro;
-	private JPanel pnlMemoriaRam;
+	private JPanel pnlPrueba;
 	
 	private JTextField textMarca;
 	private JTextField textModelo;
 	private JTextField textSocket;
-	private JComboBox cmboxConexiones;
-	private JComboBox cmboxRam;
+	private JComboBox<String> cmboxConexiones;
+	private JComboBox<String> cmboxRam;
 
 	
 	private JTextField txtGb;
@@ -70,6 +64,8 @@ public class RegistrarComponente extends JDialog {
 	private JLabel lblConexiones;
 	private JLabel lblCapacidad;
 	private JLabel lblVelocidad;
+	private JTextField textConexiones;
+
 	
 
 	/**
@@ -89,7 +85,7 @@ public class RegistrarComponente extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegistrarComponente() {
-		setBounds(100, 100, 421, 603);
+		setBounds(100, 100, 413, 571);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -137,7 +133,7 @@ public class RegistrarComponente extends JDialog {
 		panel.setBounds(5, 184, 391, 118);
 		contentPanel.add(panel);
 		panel.setLayout(null);
-		
+	
 		rdbMotherBoard = new JRadioButton("MotherBoard");
 		rdbMotherBoard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -146,36 +142,64 @@ public class RegistrarComponente extends JDialog {
 				rdbMicro.setSelected(false);
 				rdbMemoriaRam.setSelected(false);
 				
-				pnlDiscoDuro.setVisible(false);
-				pnlMicro.setVisible(false);
-				pnlMemoriaRam.setVisible(false);
+				lblTipoDeRam.setVisible(true);
+				cmboxRam.setVisible(true);
 				
+				lblSocket.setVisible(true);
+				textSocket.setVisible(true);
+				lblSocket.setEnabled(true);
+				textSocket.setEnabled(true);
+				
+				cmboxConexiones.setVisible(false);
+				textConexiones.setVisible(true);
+				lblConexiones.setVisible(true);
+
+				lblVelocidad.setVisible(false);
+				spnVelocidad.setVisible(false);
+				
+				lblCapacidad.setVisible(false);
+				spnCapacidad.setVisible(false);
+				
+				txtGb.setVisible(false);
+				txtGhz.setVisible(false);
+				updateCodigo();
 			}
 		});
+		rdbMotherBoard.setSelected(true);
 		rdbMotherBoard.setBounds(7, 25, 118, 23);
 		panel.add(rdbMotherBoard);
 		
 		rdbDiscoDuro = new JRadioButton("Disco Duro");
 		rdbDiscoDuro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				rdbDiscoDuro.setSelected(true);
 				rdbMicro.setSelected(false);
 				rdbMemoriaRam.setSelected(false);
-				rdbMotherBoard.setSelected(true);
+				rdbMotherBoard.setSelected(false);
+				rdbDiscoDuro.setSelected(true);
+
+				cmboxConexiones.setVisible(true);
+				textConexiones.setVisible(false);
+				lblConexiones.setVisible(true);
 				
-				pnlDiscoDuro.setVisible(true);
-				pnlMicro.setVisible(false);
-				pnlMemoriaRam.setVisible(false);
-				pnlMotherBoard.setVisible(true);
-				
-				lblTipoDeRam.setVisible(false);
-				cmboxRam.setVisible(false);
-				lblSocket.setVisible(false);
-				textSocket.setVisible(false);
+				lblCapacidad.setBounds(139, 83, 110, 14);
+				spnCapacidad.setBounds(139, 102, 128, 20);
+				txtGb.setBounds(266, 102, 29, 20);
 				
 				lblCapacidad.setVisible(true);
 				spnCapacidad.setVisible(true);
 				
+				lblTipoDeRam.setVisible(false);
+				cmboxRam.setVisible(false);
+				
+				lblSocket.setVisible(false);
+				textSocket.setVisible(false);
+				
+				lblVelocidad.setVisible(false);
+				spnVelocidad.setVisible(false);
+				
+				txtGb.setVisible(true);
+				txtGhz.setVisible(false);
+
 				updateCodigo();
 			}
 		});
@@ -190,15 +214,25 @@ public class RegistrarComponente extends JDialog {
 				rdbMemoriaRam.setSelected(false);
 				rdbMotherBoard.setSelected(false);
 				
-				pnlMotherBoard.setVisible(true);
-				pnlDiscoDuro.setVisible(false);
-				pnlMicro.setVisible(true);
-				pnlMemoriaRam.setVisible(false);
-				
 				lblTipoDeRam.setVisible(false);
 				cmboxRam.setVisible(false);
-				lblConexiones.setVisible(false);
+				
+				lblSocket.setVisible(true);
+				textSocket.setVisible(true);
+				
 				cmboxConexiones.setVisible(false);
+				lblConexiones.setVisible(false);
+				textConexiones.setVisible(false);
+
+				lblVelocidad.setVisible(true);
+				spnVelocidad.setVisible(true);
+				
+				lblCapacidad.setVisible(false);
+				spnCapacidad.setVisible(false);
+				
+				txtGb.setVisible(false);
+				txtGhz.setVisible(true);
+				
 				updateCodigo();
 			}
 		});
@@ -213,120 +247,126 @@ public class RegistrarComponente extends JDialog {
 				rdbMemoriaRam.setSelected(true);
 				rdbMotherBoard.setSelected(false);
 				
-				pnlMotherBoard.setVisible(true);
-				pnlDiscoDuro.setVisible(true);
-				pnlMicro.setVisible(false);
-				pnlMemoriaRam.setVisible(true);
+				lblTipoDeRam.setVisible(true);
+				cmboxRam.setVisible(true);
 				
-				lblConexiones.setVisible(false);
-				cmboxConexiones.setVisible(false);
 				lblSocket.setVisible(false);
 				textSocket.setVisible(false);
+				
+				cmboxConexiones.setVisible(false);
+				lblConexiones.setVisible(false);
+				textConexiones.setVisible(false);
+
+				lblVelocidad.setVisible(false);
+				spnVelocidad.setVisible(false);
+				
+				lblCapacidad.setBounds(201, 83, 110, 14);
+				spnCapacidad.setBounds(201, 102, 128, 20);
+				lblCapacidad.setVisible(true);
+				spnCapacidad.setVisible(true);
+				
+				txtGb.setBounds(326, 102, 29, 20);
+				txtGb.setVisible(true);
+				txtGhz.setVisible(false);
+				
 				updateCodigo();
 			}
 		});
 		rdbMemoriaRam.setBounds(202, 69, 127, 23);
 		panel.add(rdbMemoriaRam);
 		
-		pnlMotherBoard = new JPanel();
-		pnlMotherBoard.setBounds(5, 304, 391, 209);
-		contentPanel.add(pnlMotherBoard);
-		pnlMotherBoard.setLayout(null);
+		pnlPrueba = new JPanel();
+		pnlPrueba.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		pnlPrueba.setLayout(null);
+		pnlPrueba.setToolTipText("");
+		pnlPrueba.setBounds(5, 315, 391, 202);
+		contentPanel.add(pnlPrueba);
 		
 		JLabel lblMarca = new JLabel("Marca:");
 		lblMarca.setBounds(12, 13, 90, 14);
-		pnlMotherBoard.add(lblMarca);
+		pnlPrueba.add(lblMarca);
 		
 		textMarca = new JTextField();
-		textMarca.setBounds(12, 29, 151, 20);
-		pnlMotherBoard.add(textMarca);
+		textMarca.setBounds(12, 28, 128, 20);
+		pnlPrueba.add(textMarca);
 		textMarca.setText((String) null);
 		textMarca.setColumns(10);
 		
-		lblTipoDeRam = new JLabel("Tipo De Ram:");
-		lblTipoDeRam.setBounds(12, 82, 110, 14);
-		pnlMotherBoard.add(lblTipoDeRam);
-		
-		cmboxRam = new JComboBox();
-		cmboxRam.setBounds(12, 98, 151, 22);
-		pnlMotherBoard.add(cmboxRam);
-		cmboxRam.setModel(new DefaultComboBoxModel(new String[] {"<<Seleccione>>", "DDR", "DDR-2", "DDR-3", "DDR-4", "DDR-5"}));
-		
 		JLabel lblModelo = new JLabel("Modelo:");
-		lblModelo.setBounds(251, 13, 110, 14);
-		pnlMotherBoard.add(lblModelo);
+		lblModelo.setBounds(201, 13, 110, 14);
+		pnlPrueba.add(lblModelo);
 		
 		textModelo = new JTextField();
-		textModelo.setBounds(251, 29, 128, 20);
-		pnlMotherBoard.add(textModelo);
+		textModelo.setBounds(201, 28, 128, 20);
+		pnlPrueba.add(textModelo);
 		textModelo.setText((String) null);
 		textModelo.setColumns(10);
 		
+		lblTipoDeRam = new JLabel("Tipo De Ram:");
+		lblTipoDeRam.setBounds(12, 83, 110, 14);
+		pnlPrueba.add(lblTipoDeRam);
+		
+		cmboxRam = new JComboBox<String>();
+		cmboxRam.setBounds(12, 101, 128, 22);
+		pnlPrueba.add(cmboxRam);
+		cmboxRam.setModel(new DefaultComboBoxModel<String>(new String[] {"<<Seleccione>>", "DDR", "DDR-2", "DDR-3", "DDR-4", "DDR-5"}));
+		
 		lblSocket = new JLabel("Socket:");
-		lblSocket.setBounds(251, 82, 110, 14);
-		pnlMotherBoard.add(lblSocket);
+		lblSocket.setBounds(201, 83, 110, 14);
+		pnlPrueba.add(lblSocket);
 		
 		textSocket = new JTextField();
-		textSocket.setBounds(251, 98, 128, 20);
-		pnlMotherBoard.add(textSocket);
+		textSocket.setBounds(201, 102, 128, 20);
+		pnlPrueba.add(textSocket);
 		textSocket.setText((String) null);
 		textSocket.setColumns(10);
 		
 		lblConexiones = new JLabel("Conexiones:");
-		lblConexiones.setBounds(148, 137, 110, 14);
-		pnlMotherBoard.add(lblConexiones);
+		lblConexiones.setBounds(139, 135, 90, 14);
+		pnlPrueba.add(lblConexiones);
 		
-		cmboxConexiones = new JComboBox();
-		cmboxConexiones.setBounds(148, 153, 124, 22);
-		pnlMotherBoard.add(cmboxConexiones);
-		cmboxConexiones.setModel(new DefaultComboBoxModel(new String[] {"<<Seleccione>>", "IDE", "SATA", "SATA-2", "SATA-3"}));
-		
-		pnlDiscoDuro = new JPanel();
-		pnlDiscoDuro.setLayout(null);
-		pnlDiscoDuro.setBounds(5, 304, 391, 209);
-		contentPanel.add(pnlDiscoDuro);
+		cmboxConexiones = new JComboBox<String>();
+		cmboxConexiones.setBounds(139, 148, 128, 22);
+		pnlPrueba.add(cmboxConexiones);
+		cmboxConexiones.setModel(new DefaultComboBoxModel<String>(new String[] {"<<Seleccione>>", "IDE", "SATA", "SATA-2", "SATA-3"}));
 		
 		lblCapacidad = new JLabel("Capacidad:");
-		lblCapacidad.setBounds(251, 82, 110, 14);
-		pnlDiscoDuro.add(lblCapacidad);
+		lblCapacidad.setBounds(139, 83, 110, 14);
+		pnlPrueba.add(lblCapacidad);
 		
 		spnCapacidad = new JSpinner();
-		spnCapacidad.setBounds(251, 98, 81, 20);
-		pnlDiscoDuro.add(spnCapacidad);
+		spnCapacidad.setBounds(139, 102, 128, 20);
+		pnlPrueba.add(spnCapacidad);
 		spnCapacidad.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
 		
 		txtGb = new JTextField();
-		txtGb.setBounds(330, 98, 29, 20);
-		pnlDiscoDuro.add(txtGb);
+		txtGb.setBounds(266, 102, 29, 20);
+		pnlPrueba.add(txtGb);
 		txtGb.setColumns(10);
 		txtGb.setEditable(false);
 		txtGb.setText("GB");
 		
-		pnlMicro = new JPanel();
-		pnlMicro.setLayout(null);
-		pnlMicro.setBounds(5, 304, 391, 209);
-		contentPanel.add(pnlMicro);
-		
 		lblVelocidad = new JLabel("Velocidad:");
-		lblVelocidad.setBounds(12, 82, 110, 14);
-		pnlMicro.add(lblVelocidad);
+		lblVelocidad.setBounds(12, 83, 81, 14);
+		pnlPrueba.add(lblVelocidad);
 		
 		spnVelocidad = new JSpinner();
+		spnVelocidad.setBounds(12, 101, 98, 22);
+		pnlPrueba.add(spnVelocidad);
 		spnVelocidad.setModel(new SpinnerNumberModel(new Float(0), new Float(0), null, new Float(1)));
-		spnVelocidad.setBounds(12, 97, 81, 20);
-		pnlMicro.add(spnVelocidad);
 		
 		txtGhz = new JTextField();
+		txtGhz.setBounds(111, 102, 29, 20);
+		pnlPrueba.add(txtGhz);
 		txtGhz.setText("Ghz");
 		txtGhz.setEditable(false);
 		txtGhz.setColumns(10);
-		txtGhz.setBounds(89, 97, 29, 20);
-		pnlMicro.add(txtGhz);
 		
-		pnlMemoriaRam = new JPanel();
-		pnlMemoriaRam.setBounds(5, 304, 391, 209);
-		contentPanel.add(pnlMemoriaRam);
-		pnlMemoriaRam.setLayout(null);
+		textConexiones = new JTextField();
+		textConexiones.setBounds(139, 149, 128, 20);
+		pnlPrueba.add(textConexiones);
+		textConexiones.setText((String) null);
+		textConexiones.setColumns(10);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -347,30 +387,26 @@ public class RegistrarComponente extends JDialog {
 						if(rdbMotherBoard.isSelected()){
 							String socket = textSocket.getText();
 							String tipo = (String) cmboxRam.getSelectedItem();
-							//String conexion = cmboxConexiones Pero no se puede seleccionar mas de una so, bobo.
-							aux = new Motherboard(serial, 1, precio, modelo, marca, socket, tipo, null);
+							String conexion = textConexiones.getText(); 
+							aux = new Motherboard(serial, stock, precio, modelo, marca, socket, tipo, conexion);
 						}
 						if(rdbDiscoDuro.isSelected()){
 							int capacidad = Integer.valueOf((Integer) spnCapacidad.getValue()); 
 							String conexion = (String)cmboxConexiones.getSelectedItem();
-							aux = new DiscoDuro(serial, 1, precio, modelo, marca, capacidad, conexion);
+							aux = new DiscoDuro(serial, stock, precio, modelo, marca, capacidad, conexion);
 						}
 						if(rdbMicro.isSelected()){
 							String socket = textSocket.getText();
 							Float velocidad = Float.valueOf((Float) spnVelocidad.getValue());
-							aux = new Micro(serial, 1, precio, modelo, marca, socket, velocidad);
+							aux = new Micro(serial, stock, precio, modelo, marca, socket, velocidad);
 						}
 						if(rdbMemoriaRam.isSelected()){
 							String tipo = (String) cmboxRam.getSelectedItem();
 							int capacidad = Integer.valueOf((Integer) spnCapacidad.getValue()); 
-							aux = new MemoriaRam(serial, 1, precio, modelo, marca, capacidad, tipo);
+							aux = new MemoriaRam(serial, stock, precio, modelo, marca, capacidad, tipo);
 						}
 						Tienda.getInstance().RegComponente(aux);
 						JOptionPane.showMessageDialog(null, "Operacion Exitosa", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-						
-						if (stock > 1) {
-							regMasivo(aux,stock);
-						}
 						clean();
 					}
 
@@ -385,6 +421,11 @@ public class RegistrarComponente extends JDialog {
 				buttonPane.add(cancelButton);
 			}
 		}
+		if (rdbMotherBoard.isSelected()) {
+			Reset();
+			updateCodigo();
+		}
+		updateCodigo();
 	}
 
 	private void updateCodigo() {
@@ -405,32 +446,52 @@ public class RegistrarComponente extends JDialog {
 	}
 	
 	private void clean() {
-		pnlMotherBoard.setVisible(true);
+
 		rdbMotherBoard.setSelected(true);
-		
-		pnlMicro.setVisible(false);
 		rdbMicro.setSelected(false);
-		
-		pnlDiscoDuro.setVisible(false);
 		rdbDiscoDuro.setSelected(false);
-		
-		pnlMemoriaRam.setVisible(false);
 		rdbMemoriaRam.setSelected(false);
+		
+		textMarca.setText(" ");
+		textModelo.setText(" ");
+		textSocket.setText(" ");
+		textConexiones.setText(" ");
+		
+		cmboxConexiones.setSelectedIndex(0);
+		cmboxRam.setSelectedIndex(0);
 		
 		spnPrecio.setValue(new Float(0.0));
 		spnCapacidad.setValue(new Integer(0));
 		spnVelocidad.setValue(new Float(0.0));
 		spnCantidad.setValue(new Integer(0));
-
+		Reset();
 		updateCodigo();
 	}
-	
-	private void regMasivo(Componente aux, int cant) {
-		for (int i=0; i<cant; i++) {
-			updateCodigo();
-			String serial = textSerial.getText();
-			aux.setNumSerie(serial);
-			Tienda.getInstance().RegComponente(aux);
-		}
+	private void Reset() {
+		rdbMotherBoard.setSelected(true);
+		rdbDiscoDuro.setSelected(false);
+		rdbMicro.setSelected(false);
+		rdbMemoriaRam.setSelected(false);
+		
+		lblTipoDeRam.setVisible(true);
+		cmboxRam.setVisible(true);
+		
+		lblSocket.setVisible(true);
+		textSocket.setVisible(true);
+		lblSocket.setEnabled(true);
+		textSocket.setEnabled(true);
+		
+		cmboxConexiones.setVisible(false);
+		textConexiones.setVisible(true);
+		lblConexiones.setVisible(true);
+
+		lblVelocidad.setVisible(false);
+		spnVelocidad.setVisible(false);
+		
+		lblCapacidad.setVisible(false);
+		spnCapacidad.setVisible(false);
+		
+		txtGb.setVisible(false);
+		txtGhz.setVisible(false);
 	}
 }
