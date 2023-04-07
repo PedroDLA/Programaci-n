@@ -64,6 +64,21 @@ public class Tienda {
 
 		return null;
 	}
+	
+	public Componente ComponenteByCodigo(String codigo) {
+
+		for (Componente componente : misComponentes) {
+			if (componente.getNumSerie().equalsIgnoreCase(codigo)) {
+				return componente;
+			}
+		}
+
+		return null;
+	}
+
+	public void eliminarComponente(Componente selected) {
+		misComponentes.remove(selected);
+	}
 		
 	
 	
