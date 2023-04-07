@@ -1,7 +1,7 @@
 package logico;
 
 public abstract class Componente {
-	protected static String numSerie;
+	protected  String numSerie;
 	protected int stock;
 	protected float precio;
 	protected String modelo;
