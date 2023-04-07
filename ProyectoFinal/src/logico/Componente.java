@@ -1,7 +1,7 @@
 package logico;
 
 public abstract class Componente {
-	protected String numSerie;
+	protected static String numSerie;
 	protected int stock;
 	protected float precio;
 	protected String modelo;
@@ -16,7 +16,7 @@ public abstract class Componente {
 		this.marca = marca;
 	}
 
-	public String getNumSerie() {
+	public static String getNumSerie() {
 		return numSerie;
 	}
 
@@ -38,6 +38,27 @@ public abstract class Componente {
 
 	public void setPrecio(float precio) {
 		this.precio = precio;
+	}
+
+	public String getCodigo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getModelo() {
+		return modelo;
+	}
+
+	public void setModelo(String modelo) {
+		this.modelo = modelo;
+	}
+
+	public String getMarca() {
+		return marca;
+	}
+
+	public void setMarca(String marca) {
+		this.marca = marca;
 	}
 	
 	

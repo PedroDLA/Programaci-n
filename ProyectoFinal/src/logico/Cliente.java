@@ -4,6 +4,7 @@ public class Cliente {
 	private String cedula;
 	private String nombre;
 	private int telefono;
+	private String direccion;
 	
 	public Cliente(String cedula, String nombre, int telefono) {
 		super();
@@ -34,5 +35,13 @@ public class Cliente {
 
 	public void setTelefono(int telefono) {
 		this.telefono = telefono;
+	}
+
+	public String getDireccion() {
+		return direccion;
+	}
+
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
 	}
 }
