@@ -11,7 +11,7 @@ public class Tienda {
 	
 	private Tienda() {
 		super();
-		misComponentes = new ArrayList<>();
+		misComponentes = new ArrayList<Componente>();
 		misClientes = new ArrayList<>();
 		misFacturas = new ArrayList<>();	
 	}
@@ -76,12 +76,39 @@ public class Tienda {
 				prueba = componente;
 			}
 		}
-		System.out.println("MMMMMMMMMMGGGGGGGGGGGGGG");
+		
 		return prueba;
 	}
 
 	public void eliminarComponente(Componente selected) {
 		misComponentes.remove(selected);
+	}
+	
+	
+
+	public void sacarUnidadAfactura(Componente componente, int diferencia) {
+		
+		int stock;
+		
+		for(Componente componentes : misComponentes) {
+			if( componentes == componente) {
+				stock = componentes.getStock()-diferencia;
+				componentes.setStock(stock);
+			}	
+		}
+		
+	}
+
+	public void sacarUnidadAinventario(Componente selected, int diferencia) {
+		int stock;
+		
+		for(Componente componentes : misComponentes) {
+			if( componentes == selected) {
+				stock = componentes.getStock()+diferencia;
+				componentes.setStock(stock);
+			}	
+		}
+		
 	}
 	
 	
