@@ -68,13 +68,13 @@ public class Tienda {
 	}
 	
 	public Componente ComponenteByCodigo(String numSerie) {
-		
+
 		Componente prueba = null;
 		for (Componente componente : misComponentes) {
 			if (componente.getNumSerie().equalsIgnoreCase(numSerie)) {
 				prueba = componente;
 			}
-  }
+		}
 		return prueba;
 	}
 
@@ -109,5 +109,63 @@ public class Tienda {
 		
 	}
 	
+	public Componente copiarComp (Componente selec) {
+		Componente aux = null;
+		if(selec instanceof Motherboard){
+			 
+			aux = new Motherboard(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((Motherboard) selec).getSocket(), 
+					((Motherboard) selec).getTipo(), ((Motherboard) selec).getConexiones());
+		}
+		if(selec instanceof DiscoDuro){
+			 
+			aux = new DiscoDuro(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((DiscoDuro) selec).getCapacidad(), 
+					((DiscoDuro) selec).getTipoConexion());
+		}
+		if(selec instanceof Micro){
+			 
+			aux = new Micro(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((Micro) selec).getSocket(),
+					((Micro) selec).getVelocidad());
+		}
+		if(selec instanceof MemoriaRam){
+			 
+			aux = new MemoriaRam(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((MemoriaRam) selec).getCapacidad(), 
+					((MemoriaRam) selec).getTipo());
+		}
+		
+		return aux;
+	}
+	
+	public ArrayList<Componente> copiarArray () {
+		ArrayList<Componente>aux2 = new ArrayList<Componente>();
+		Componente aux = null;
+		for (Componente selec : misComponentes) {
+			
+			if(selec instanceof Motherboard){
+				aux = new Motherboard(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((Motherboard) selec).getSocket(), 
+						((Motherboard) selec).getTipo(), ((Motherboard) selec).getConexiones());
+				aux2.add(aux);
+			}
+			if(selec instanceof DiscoDuro){
+
+				aux = new DiscoDuro(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((DiscoDuro) selec).getCapacidad(), 
+						((DiscoDuro) selec).getTipoConexion());
+				aux2.add(aux);
+			}
+			if(selec instanceof Micro){
+
+				aux = new Micro(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((Micro) selec).getSocket(),
+						((Micro) selec).getVelocidad());
+				aux2.add(aux);
+			}
+			if(selec instanceof MemoriaRam){
+
+				aux = new MemoriaRam(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((MemoriaRam) selec).getCapacidad(), 
+						((MemoriaRam) selec).getTipo());
+				aux2.add(aux);
+			}
+		}
+
+		return aux2;
+	}
 	
 }
