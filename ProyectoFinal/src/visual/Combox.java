@@ -188,11 +188,12 @@ public class Combox extends JDialog {
 					btnAceptar = new JButton("Aceptar");
 					btnAceptar.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							//Componente prueba = selected;
-							//selected_1=prueba;
 							int temp = Integer.valueOf((Integer)spnAgregar.getValue());
-							combo.getMisComponentes().add(selected);
-							modCombo(selected,temp);
+							selected_1 = prueba(selected);
+							
+							combo.getMisComponentes().add(selected_1);
+							
+							modCombo(selected_1.getNumSerie(),temp);
 							
 							selected.setStock(selected.getStock() - temp);
 							modTemporal(selected);
@@ -400,23 +401,47 @@ public class Combox extends JDialog {
 		 
 	}
 	
-	public void modTemporal(Componente selected) {
-		System.out.println(selected.getStock()+"                 2");
+	public void modTemporal(Componente sel) {
 		for (Componente componente : temporal) {
-			if (componente.getNumSerie().equalsIgnoreCase(selected.getNumSerie())) {
+			if (componente.getNumSerie().equalsIgnoreCase(sel.getNumSerie())) {
 				temporal.remove(componente);
-				temporal.add(selected);
+				temporal.add(sel);
 			}
 		}
 	}
 	
-	public void modCombo(Componente selected, int stock) {
-		System.out.println(selected.getStock()+"                 2");
+	public void modCombo(String serial, int stock) {
 		for (Componente componente : combo.getMisComponentes()) {
-			if (componente.getNumSerie().equalsIgnoreCase(selected.getNumSerie())) {
+			if (componente.getNumSerie().equalsIgnoreCase(serial)) {
 				componente.setStock(stock);
 			}
 		}
+	}
+	
+	public Componente prueba (Componente selec) {
+		Componente aux = null;
+		if(selec instanceof Motherboard){
+			 
+			aux = new Motherboard(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((Motherboard) selec).getSocket(), 
+					((Motherboard) selec).getTipo(), ((Motherboard) selec).getConexiones());
+		}
+		if(selec instanceof DiscoDuro){
+			 
+			aux = new DiscoDuro(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((DiscoDuro) selec).getCapacidad(), 
+					((DiscoDuro) selec).getTipoConexion());
+		}
+		if(selec instanceof Micro){
+			 
+			aux = new Micro(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((Micro) selec).getSocket(),
+					((Micro) selec).getVelocidad());
+		}
+		if(selec instanceof MemoriaRam){
+			 
+			aux = new MemoriaRam(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((MemoriaRam) selec).getCapacidad(), 
+					((MemoriaRam) selec).getTipo());
+		}
+		
+		return aux;
 	}
 	
 }
