@@ -190,12 +190,31 @@ public class Combox extends JDialog {
 						public void actionPerformed(ActionEvent e) {
 							//Componente prueba = selected;
 							//selected_1=prueba;
-							int temp = Integer.valueOf((Integer)spnAgregar.getValue());
-							combo.getMisComponentes().add(selected);
-							modCombo(selected,temp);
 							
-							selected.setStock(selected.getStock() - temp);
-							modTemporal(selected);
+							int temp = Integer.valueOf((Integer)spnAgregar.getValue());
+							System.out.println(temp);
+							//combo.getMisComponentes().add(selected);
+							Componente aux = selected;
+							
+							if(selected instanceof Micro) {
+								Componente copia = new Micro(selected.getNumSerie(), selected.getStock(), selected.getPrecio(), selected.getModelo(), selected.getMarca());
+							}
+							if(selected instanceof Motherboard) {
+								Componente copia = new Motherboard(selected.getNumSerie(), selected.getStock(), selected.getPrecio(), selected.getModelo(), selected.getMarca());
+							}
+							if(selected instanceof DiscoDuro) {
+								Componente copia = new DiscoDuro(selected.getNumSerie(), selected.getStock(), selected.getPrecio(), selected.getModelo(), selected.getMarca());
+							}
+							if(selected instanceof MemoriaRam) {
+								Componente copia = new MemoriaRam(selected.getNumSerie(), selected.getStock(), selected.getPrecio(), selected.getModelo(), selected.getMarca());
+							}
+							
+							
+							modTemporal(copia, temp);
+							modCombo(aux,temp);
+							
+							//selected.setStock(selected.getStock() - temp);
+							
 							pnlAgregar.setVisible(false);
 							btnAgregar.setVisible(true);
 							if (combo.getMisComponentes().size() > 0) {
@@ -400,23 +419,27 @@ public class Combox extends JDialog {
 		 
 	}
 	
-	public void modTemporal(Componente selected) {
-		System.out.println(selected.getStock()+"                 2");
+	public void modTemporal(Componente selected, int stock) {
+		System.out.println(selected.getStock()+"                 1");
+		selected.setStock(selected.getStock()-stock);
 		for (Componente componente : temporal) {
-			if (componente.getNumSerie().equalsIgnoreCase(selected.getNumSerie())) {
+			if (componente == selected) {
 				temporal.remove(componente);
 				temporal.add(selected);
+				System.out.println(selected.getStock()+"                 5");
 			}
 		}
 	}
 	
 	public void modCombo(Componente selected, int stock) {
+		selected.setStock(stock);
 		System.out.println(selected.getStock()+"                 2");
-		for (Componente componente : combo.getMisComponentes()) {
+		combo.getMisComponentes().add(selected);
+		/*for (Componente componente : combo.getMisComponentes()) {
 			if (componente.getNumSerie().equalsIgnoreCase(selected.getNumSerie())) {
 				componente.setStock(stock);
 			}
-		}
+		}*/
 	}
 	
 }
