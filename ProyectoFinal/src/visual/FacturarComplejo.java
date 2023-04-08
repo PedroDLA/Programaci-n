@@ -49,9 +49,7 @@ public class FacturarComplejo extends JDialog {
 	private JTextField DirtextField;
 	private JTextField SerietextField;
 	private JTextField textField;
-	private static ArrayList<Componente> componentesFactura = null;
-	private static int cantidad = 1;
-	private int in = 0;
+	private static ArrayList<Componente> componentesFactura = new ArrayList<Componente>();
 	/**
 	 * Launch the application.
 	 */
@@ -86,7 +84,7 @@ public class FacturarComplejo extends JDialog {
 				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 				panel.add(scrollPane);
 				{
-					String[] headers = {"Numero de serie","Tipo de Componente","Marca","Modelo", "Stock","Cantidad", "Precio", "Subtotal" };
+					String[] headers = {"Numero de serie","Tipo de Componente","Marca","Modelo", "Stock", "Precio", "Subtotal" };
 					
 					table = new JTable();
 					table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -181,13 +179,24 @@ public class FacturarComplejo extends JDialog {
 					JButton btnAnadir = new JButton("Ingresar");
 					btnAnadir.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							String serie = SerietextField.getText();
+							String serie = SerietextField.getText().toString();
+							System.out.println(serie);
 							Componente componente = Tienda.getInstance().ComponenteByCodigo(serie);
+							
+							if(componente != null) {
+							componente.setStock(2);
+							System.out.println(componente.getStock());
+							Componente aux = componente;
+							int diferencia = componente.getStock();
+							Tienda.getInstance().sacarUnidadAfactura(aux, diferencia);
 							componentesFactura.add(componente);
-							//cantidad = (int) table.getValueAt(componentesFactura.indexOf(componente), 5);
+							} else {
+								JOptionPane.showMessageDialog(null, "El Componente no existe", "Error", JOptionPane.INFORMATION_MESSAGE);
+							}
 							
 							load();
 						}
+						
 					});
 					btnAnadir.setBounds(673, 72, 104, 23);
 					panel_1.add(btnAnadir);
@@ -237,9 +246,10 @@ public class FacturarComplejo extends JDialog {
 									"Eliminar Componente", JOptionPane.OK_CANCEL_OPTION);
 							if(option == JOptionPane.OK_OPTION) {
 								componentesFactura.remove(selected);
+								Tienda.getInstance().sacarUnidadAinventario(selected, selected.getStock());
 								
-								load();
 							}
+							load();
 						}
 					}
 				});
@@ -248,6 +258,7 @@ public class FacturarComplejo extends JDialog {
 					btnLimpiar.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							componentesFactura.clear();
+							load();
 						}
 					});
 					{
@@ -283,9 +294,8 @@ public class FacturarComplejo extends JDialog {
 				rows[2] = aux.getMarca();
 				rows[3] = aux.getModelo();
 				rows[4] = aux.getStock();
-				rows[5] = cantidad;
-				rows[6] = aux.getPrecio();
-				rows[7] = aux.getPrecio()*cantidad;
+				rows[5] = aux.getPrecio();
+				rows[6] = aux.getPrecio()*aux.getStock();
 				if(aux instanceof DiscoDuro ){
 					rows[1] = "Disco Duro";	
 				}
