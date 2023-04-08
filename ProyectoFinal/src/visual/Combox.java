@@ -188,15 +188,15 @@ public class Combox extends JDialog {
 					btnAceptar = new JButton("Aceptar");
 					btnAceptar.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
+
 							int temp = Integer.valueOf((Integer)spnAgregar.getValue());
 							selected_1 = prueba(selected);
 							
 							combo.getMisComponentes().add(selected_1);
 							
 							modCombo(selected_1.getNumSerie(),temp);
+
 							
-							selected.setStock(selected.getStock() - temp);
-							modTemporal(selected);
 							pnlAgregar.setVisible(false);
 							btnAgregar.setVisible(true);
 							if (combo.getMisComponentes().size() > 0) {
@@ -401,21 +401,23 @@ public class Combox extends JDialog {
 		 
 	}
 	
+
 	public void modTemporal(Componente sel) {
 		for (Componente componente : temporal) {
 			if (componente.getNumSerie().equalsIgnoreCase(sel.getNumSerie())) {
 				temporal.remove(componente);
 				temporal.add(sel);
+
 			}
 		}
 	}
-	
+
 	public void modCombo(String serial, int stock) {
 		for (Componente componente : combo.getMisComponentes()) {
 			if (componente.getNumSerie().equalsIgnoreCase(serial)) {
 				componente.setStock(stock);
 			}
-		}
+		}*/
 	}
 	
 	public Componente prueba (Componente selec) {
