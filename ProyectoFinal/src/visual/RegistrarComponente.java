@@ -463,7 +463,7 @@ public class RegistrarComponente extends JDialog {
 		spnPrecio.setValue(new Float(0.0));
 		spnCapacidad.setValue(new Integer(0));
 		spnVelocidad.setValue(new Float(0.0));
-		spnCantidad.setValue(new Integer(0));
+		spnCantidad.setValue(new Integer(1));
 		Reset();
 		updateCodigo();
 	}
