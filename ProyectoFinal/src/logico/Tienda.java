@@ -67,16 +67,14 @@ public class Tienda {
 		return null;
 	}
 	
-	public Componente ComponenteByCodigo(String codigo) {
+	public Componente ComponenteByCodigo(String numSerie) {
 		
 		Componente prueba = null;
 		for (Componente componente : misComponentes) {
-			if (componente.getNumSerie().equalsIgnoreCase(codigo)) {
-				System.out.println(componente.getNumSerie());
+			if (componente.getNumSerie().equalsIgnoreCase(numSerie)) {
 				prueba = componente;
 			}
-		}
-		
+  }
 		return prueba;
 	}
 

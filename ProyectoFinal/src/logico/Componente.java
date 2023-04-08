@@ -42,11 +42,6 @@ public abstract class Componente {
 		this.precio = precio;
 	}
 
-	public String getCodigo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public String getModelo() {
 		return modelo;
 	}
