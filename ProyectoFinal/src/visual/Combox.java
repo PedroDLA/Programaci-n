@@ -385,7 +385,12 @@ public class Combox extends JDialog {
 				buttonPane.add(btnCancelar);
 			}
 		}
-		temporal = Tienda.getInstance().copiarArray();
+		try {
+			temporal = Tienda.getInstance().copiarArray();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		load(0);
 		pnlAgregar.setVisible(false);
 		pnlRemover.setVisible(false);
