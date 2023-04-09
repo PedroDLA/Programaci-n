@@ -165,7 +165,7 @@ public class Combox extends JDialog {
 							panel.setComponentZOrder(pnlAgregar, 0);
 						}
 						else {
-							JOptionPane.showMessageDialog(null, "Stock Vacío!!!", "AVISO", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Stock Vacï¿½o!!!", "AVISO", JOptionPane.INFORMATION_MESSAGE);
 
 						}
 						
@@ -202,6 +202,7 @@ public class Combox extends JDialog {
 						public void actionPerformed(ActionEvent e) {
 
 							int temp = Integer.valueOf((Integer)spnAgregar.getValue());
+
 							if (temp <= selected.getStock()) {
 								selected_1 = Tienda.getInstance().copiarComp(selected);
 								
@@ -226,6 +227,19 @@ public class Combox extends JDialog {
 							}
 							else {
 								JOptionPane.showMessageDialog(null, "Excediste la cantidad existente", "AVISO", JOptionPane.INFORMATION_MESSAGE);
+
+							selected_1 = prueba(selected);
+							
+							combo.getMisComponentes().add(selected_1);
+							
+							modCombo(selected_1.getNumSerie(),temp);
+
+							
+							pnlAgregar.setVisible(false);
+							btnAgregar.setVisible(true);
+							if (combo.getMisComponentes().size() > 0) {
+								load2();
+
 							}
 							clean();
 						}
@@ -483,15 +497,17 @@ public class Combox extends JDialog {
 		 
 	}
 	
+
 	public void modTemporal(Componente sel) {
 		for (Componente componente : temporal) {
 			if (componente.getNumSerie().equalsIgnoreCase(sel.getNumSerie())) {
 				temporal.remove(componente);
 				temporal.add(sel);
+
 			}
 		}
 	}
-	
+
 	public void modCombo(String serial, int stock) {
 		for (Componente componente : combo.getMisComponentes()) {
 			if (componente.getNumSerie().equalsIgnoreCase(serial)) {

@@ -83,31 +83,6 @@ public class Tienda {
 	}
 	
 	
-
-	public void sacarUnidadAfactura(Componente componente, int diferencia) {
-		
-		int stock;
-		
-		for(Componente componentes : misComponentes) {
-			if( componentes == componente) {
-				stock = componentes.getStock()-diferencia;
-				componentes.setStock(stock);
-			}	
-		}
-		
-	}
-
-	public void sacarUnidadAinventario(Componente selected, int diferencia) {
-		int stock;
-		
-		for(Componente componentes : misComponentes) {
-			if( componentes == selected) {
-				stock = componentes.getStock()+diferencia;
-				componentes.setStock(stock);
-			}	
-		}
-		
-	}
 	
 	public Componente copiarComp (Componente selec) {
 		Componente aux = null;

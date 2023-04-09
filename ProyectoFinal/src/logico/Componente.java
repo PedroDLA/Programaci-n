@@ -6,7 +6,7 @@ public abstract class Componente {
 	protected float precio;
 	protected String modelo;
 	protected String marca;
-	protected int cantVenta;
+	
 	
 	public Componente(String numSerie, int stock, float precio, String modelo, String marca) {
 		super();
@@ -15,7 +15,6 @@ public abstract class Componente {
 		this.precio = precio;
 		this.modelo = modelo;
 		this.marca = marca;
-		this.cantVenta = 1;
 	}
 
 	public String getNumSerie() {
@@ -58,13 +57,7 @@ public abstract class Componente {
 		this.marca = marca;
 	}
 
-	public int getCantVenta() {
-		return cantVenta;
-	}
 
-	public void setCantVenta(int cantVenta) {
-		this.cantVenta = cantVenta;
-	}
 	
 	
 }

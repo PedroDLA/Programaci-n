@@ -32,6 +32,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JTextField;
+import javax.swing.JSpinner;
 
 public class FacturarComplejo extends JDialog {
 
@@ -41,6 +42,10 @@ public class FacturarComplejo extends JDialog {
 	private static Object rows[];
 	private JButton btnDelete;
 	private JButton btnCancelar;
+	private JButton btnLimpiar;
+	private JButton btnFacturar;
+	private JButton btnSetear;
+	
 	private String tipo;
 	private Componente selected = null;
 	private JTextField CedulatextField;
@@ -50,6 +55,10 @@ public class FacturarComplejo extends JDialog {
 	private JTextField SerietextField;
 	private JTextField textField;
 	private static ArrayList<Componente> componentesFactura = new ArrayList<Componente>();
+	private static ArrayList<Componente> temporal = Tienda.getInstance().getMisComponentes();
+	private  Componente selected_1 = null;
+	private JSpinner Agregarspinner = null;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -94,9 +103,13 @@ public class FacturarComplejo extends JDialog {
 							int ind = table.getSelectedRow();
 							if (ind >= 0 ) {
 								btnDelete.setEnabled(true);
+								btnFacturar.setEnabled(true);
+								btnLimpiar.setEnabled(true);
+								btnSetear.setEnabled(true);
 								String codigo = table.getValueAt(ind, 0).toString();
 								
-								 selected = Tienda.getInstance().ComponenteByCodigo(codigo);
+								selected = buscarComponenteBySerieFactura(codigo);
+								
 							}
 						}
 					});
@@ -181,17 +194,19 @@ public class FacturarComplejo extends JDialog {
 						public void actionPerformed(ActionEvent e) {
 							String serie = SerietextField.getText().toString();
 							System.out.println(serie);
-							Componente componente = Tienda.getInstance().ComponenteByCodigo(serie);
+							Componente componente = buscarComponenteBySerie(serie);
 							
-							if(componente != null) {
-							componente.setStock(2);
-							System.out.println(componente.getStock());
-							Componente aux = componente;
-							int diferencia = componente.getStock();
-							Tienda.getInstance().sacarUnidadAfactura(aux, diferencia);
-							componentesFactura.add(componente);
+							if(componente != null && componente.getStock()>0) {
+								
+								int diferencia = 1;//Integer.valueOf((Integer)Agregarspinner.getValue());
+								selected_1 = copia(componente);
+								selected_1.setStock(diferencia);
+								componente.setStock(componente.getStock()-diferencia);
+								reescribirComponete(componente);
+								componentesFactura.add(selected_1);
+								System.out.println(componente.getStock());
 							} else {
-								JOptionPane.showMessageDialog(null, "El Componente no existe", "Error", JOptionPane.INFORMATION_MESSAGE);
+								JOptionPane.showMessageDialog(null, "El Componente no existe o no esta disponible", "Error", JOptionPane.INFORMATION_MESSAGE);
 							}
 							
 							load();
@@ -215,19 +230,28 @@ public class FacturarComplejo extends JDialog {
 				panel.add(textField);
 			}
 			{
-				JButton btnLimpiar = new JButton("+");
-				btnLimpiar.setBounds(326, 389, 44, 25);
-				panel.add(btnLimpiar);
-			}
-			{
-				JButton btnLimpiar = new JButton("-");
-				btnLimpiar.setBounds(264, 389, 44, 25);
-				panel.add(btnLimpiar);
-			}
-			{
 				JLabel lblNuemroDeSerie = new JLabel("Cantidad por articulo:");
-				lblNuemroDeSerie.setBounds(81, 394, 167, 14);
+				lblNuemroDeSerie.setBounds(121, 394, 167, 14);
 				panel.add(lblNuemroDeSerie);
+			}
+			
+			Agregarspinner = new JSpinner();
+			Agregarspinner.setValue(1);
+			Agregarspinner.setBounds(279, 392, 46, 20);
+			panel.add(Agregarspinner);
+			{
+				btnSetear = new JButton("set->");
+				btnSetear.setEnabled(false);
+				btnSetear.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						
+						selected.setStock(Integer.valueOf((Integer)Agregarspinner.getValue()));
+						load();
+						
+					}
+				});
+				btnSetear.setBounds(337, 390, 72, 25);
+				panel.add(btnSetear);
 			}
 		}
 		{
@@ -238,6 +262,7 @@ public class FacturarComplejo extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				btnDelete = new JButton("Eliminar");
+				btnDelete.setEnabled(false);
 				btnDelete.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						if (selected != null) {
@@ -245,8 +270,12 @@ public class FacturarComplejo extends JDialog {
 									"Estas seguro de querer eliminar el Companente de la factura?",
 									"Eliminar Componente", JOptionPane.OK_CANCEL_OPTION);
 							if(option == JOptionPane.OK_OPTION) {
+								
+								int diferencia = selected.getStock();
+								Componente componente = buscarComponenteBySerie(selected.getNumSerie());
+								componente.setStock(componente.getStock()+diferencia);
+								reescribirComponete(componente);
 								componentesFactura.remove(selected);
-								Tienda.getInstance().sacarUnidadAinventario(selected, selected.getStock());
 								
 							}
 							load();
@@ -254,15 +283,28 @@ public class FacturarComplejo extends JDialog {
 					}
 				});
 				{
-					JButton btnLimpiar = new JButton("Limpiar");
+					btnLimpiar = new JButton("Limpiar");
+					btnLimpiar.setEnabled(false);
 					btnLimpiar.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
+							
+							
+							ArrayList<Componente> aux = componentesFactura;
+							for(Componente selected : aux) {
+								int diferencia = selected.getStock();
+								Componente componente = buscarComponenteBySerie(selected.getNumSerie());
+								componente.setStock(componente.getStock()+diferencia);
+								reescribirComponete(componente);
+								componentesFactura.remove(selected);
+								System.out.println("mmguevoooooooooooooooo");
+							}
 							componentesFactura.clear();
 							load();
 						}
 					});
 					{
-						JButton btnFacturar = new JButton("Facturar");
+						btnFacturar = new JButton("Facturar");
+						btnFacturar.setEnabled(false);
 						buttonPane.add(btnFacturar);
 					}
 					buttonPane.add(btnLimpiar);
@@ -311,12 +353,71 @@ public class FacturarComplejo extends JDialog {
 				model.addRow(rows);
 			  
 			}
+			
 		
 		
 	}	
+	public Componente buscarComponenteBySerie(String serie) {
+		Componente aux = null;
+		for(Componente componentes : temporal) {
+			if(componentes.getNumSerie().equalsIgnoreCase(serie)) {
+				aux = componentes;
+			}
+		}
+		return aux;
+	}
+	public Componente buscarComponenteBySerieFactura(String serie) {
+		Componente aux = null;
+		for(Componente componentes : componentesFactura) {
+			if(componentes.getNumSerie().equalsIgnoreCase(serie)) {
+				aux = componentes;
+			}
+		}
+		return aux;
+	}
 	
-
-
+	public Componente copia(Componente selec) {
+		Componente aux = null;
+		if(selec instanceof Motherboard){
+			 
+			aux = new Motherboard(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((Motherboard) selec).getSocket(), 
+					((Motherboard) selec).getTipo(), ((Motherboard) selec).getConexiones());
+		}
+		if(selec instanceof DiscoDuro){
+			 
+			aux = new DiscoDuro(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((DiscoDuro) selec).getCapacidad(), 
+					((DiscoDuro) selec).getTipoConexion());
+		}
+		if(selec instanceof Micro){
+			 
+			aux = new Micro(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((Micro) selec).getSocket(),
+					((Micro) selec).getVelocidad());
+		}
+		if(selec instanceof MemoriaRam){
+			 
+			aux = new MemoriaRam(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((MemoriaRam) selec).getCapacidad(), 
+					((MemoriaRam) selec).getTipo());
+		}
+		
+		return aux;
+	}
+	
+	
+	
+	
+	public void reescribirComponete(Componente componente) {
+		
+		for(Componente componentes: temporal) {
+			if(componentes == componente) {
+				temporal.remove(componentes);
+				temporal.add(componente);
+			}
+		}
+		
+		
+	}
+	
+	
 	
 	
 	
