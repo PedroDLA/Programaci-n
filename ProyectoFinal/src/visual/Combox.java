@@ -417,7 +417,7 @@ public class Combox extends JDialog {
 			if (componente.getNumSerie().equalsIgnoreCase(serial)) {
 				componente.setStock(stock);
 			}
-		}*/
+		}
 	}
 	
 	public Componente prueba (Componente selec) {
