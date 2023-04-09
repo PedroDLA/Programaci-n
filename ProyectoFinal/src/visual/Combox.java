@@ -122,7 +122,7 @@ public class Combox extends JDialog {
 				panel.add(comboBox);
 			}
 		}
-		{
+		
 			JPanel panel = new JPanel();
 			panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			contentPanel.add(panel, BorderLayout.CENTER);
@@ -147,13 +147,16 @@ public class Combox extends JDialog {
 								selected = Tienda.getInstance().ComponenteByCodigo(codigo);
 							}
 						}
+					
 					});
 					model = new DefaultTableModel();
 					model.setColumnIdentifiers(headers);
 					table.setModel(model);
-
+				
 				}
 			}
+		
+			
 			{
 				btnAgregar = new JButton("Agregar");
 				btnAgregar.addActionListener(new ActionListener() {
@@ -196,7 +199,7 @@ public class Combox extends JDialog {
 					spnAgregar.setBounds(12, 131, 95, 22);
 					pnlAgregar.add(spnAgregar);
 				}
-				{
+				
 					btnAceptar = new JButton("Aceptar");
 					btnAceptar.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
@@ -228,7 +231,7 @@ public class Combox extends JDialog {
 							else {
 								JOptionPane.showMessageDialog(null, "Excediste la cantidad existente", "AVISO", JOptionPane.INFORMATION_MESSAGE);
 
-							selected_1 = prueba(selected);
+							selected_1 = Tienda.getInstance().copiarComp(selected);
 							
 							combo.getMisComponentes().add(selected_1);
 							
@@ -243,12 +246,13 @@ public class Combox extends JDialog {
 							}
 							clean();
 						}
+						}
 					});
 					btnAceptar.setFont(new Font("Tahoma", Font.PLAIN, 11));
 					btnAceptar.setBounds(129, 143, 88, 22);
 					pnlAgregar.add(btnAceptar);
 				}
-			}
+			
 			{
 				pnlRemover = new JPanel();
 				pnlRemover.setLayout(null);
@@ -327,6 +331,7 @@ public class Combox extends JDialog {
 					table_1.setModel(model_1);
 				}
 			}
+			{
 			{
 				spnTotal = new JSpinner();
 				spnTotal.setBounds(685, 503, 97, 22);
