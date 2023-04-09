@@ -20,3 +20,4 @@ public class Combo {
 	
 }
 
+//Creo que necesita nombre, codigo y precio

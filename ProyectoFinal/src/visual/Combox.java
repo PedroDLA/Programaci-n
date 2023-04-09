@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -64,12 +65,17 @@ public class Combox extends JDialog {
 	private JButton btnCrear;
 	private JButton btnRemover;
 	private ArrayList <Componente> misComponentes = new ArrayList<Componente>();
-	private ArrayList <Componente> temporal = Tienda.getInstance().getMisComponentes();
+	private ArrayList <Componente> temporal = new ArrayList<Componente>();
 
 	private Combo combo= new Combo(misComponentes);
 	private JButton btnAceptar;
 	private JButton btnAceptar_1;
 	private JTable table_1;
+	private JSpinner spnTotal;
+	private JLabel lblTotal;
+	private JSpinner spnSubtotal;
+	private JLabel lblSubtotal;
+	private JLabel lblConDe;
 	/**
 	 * Launch the application.
 	 */
@@ -152,10 +158,16 @@ public class Combox extends JDialog {
 				btnAgregar = new JButton("Agregar");
 				btnAgregar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						pnlAgregar.setVisible(true);
-						btnAgregar.setVisible(false);
-						pnlAgregar.setBounds(296, 211, 229, 172);
-						panel.setComponentZOrder(pnlAgregar, 0);
+						if (selected.getStock() > 0) {
+							pnlAgregar.setVisible(true);
+							btnAgregar.setVisible(false);
+							pnlAgregar.setBounds(296, 211, 229, 172);
+							panel.setComponentZOrder(pnlAgregar, 0);
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "Stock Vac�o!!!", "AVISO", JOptionPane.INFORMATION_MESSAGE);
+
+						}
 						
 					}
 				});
@@ -190,6 +202,32 @@ public class Combox extends JDialog {
 						public void actionPerformed(ActionEvent e) {
 
 							int temp = Integer.valueOf((Integer)spnAgregar.getValue());
+
+							if (temp <= selected.getStock()) {
+								selected_1 = Tienda.getInstance().copiarComp(selected);
+								
+								boolean control = existencia(selected_1,temp);
+								
+								if (!control) {
+									combo.getMisComponentes().add(selected_1);
+									modCombo(selected_1.getNumSerie(),temp);
+								}
+		
+								selected.setStock(selected.getStock() - temp);
+								modTemporal(selected);
+								
+								pnlAgregar.setVisible(false);
+								btnAgregar.setVisible(true);
+								
+								if (combo.getMisComponentes().size() > 0) {
+									load2();
+								}
+								load(0);
+								spnAgregar.setValue(0);
+							}
+							else {
+								JOptionPane.showMessageDialog(null, "Excediste la cantidad existente", "AVISO", JOptionPane.INFORMATION_MESSAGE);
+
 							selected_1 = prueba(selected);
 							
 							combo.getMisComponentes().add(selected_1);
@@ -201,8 +239,9 @@ public class Combox extends JDialog {
 							btnAgregar.setVisible(true);
 							if (combo.getMisComponentes().size() > 0) {
 								load2();
+
 							}
-							load(0);
+							clean();
 						}
 					});
 					btnAceptar.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -233,6 +272,11 @@ public class Combox extends JDialog {
 				}
 				{
 					btnAceptar_1 = new JButton("Aceptar");
+					btnAceptar_1.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							
+						}
+					});
 					btnAceptar_1.setFont(new Font("Tahoma", Font.PLAIN, 11));
 					btnAceptar_1.setEnabled(false);
 					btnAceptar_1.setBounds(129, 137, 88, 22);
@@ -241,6 +285,15 @@ public class Combox extends JDialog {
 			}
 			{
 				btnRemover = new JButton("Remover");
+				btnRemover.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						pnlRemover.setVisible(true);
+						btnRemover.setVisible(false);
+						pnlRemover.setBounds(296, 211, 229, 172);
+						panel.setComponentZOrder(pnlRemover, 0);
+						
+					}
+				});
 				btnRemover.setEnabled(false);
 				btnRemover.setBounds(417, 234, 97, 25);
 				panel.add(btnRemover);
@@ -254,6 +307,18 @@ public class Combox extends JDialog {
 					String[] headers = {"Numero de serie","Marca","Modelo", "Cantidad", "Precio", "Tipo de Componente"};
 
 					table_1 = new JTable();
+					table_1.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							int ind = table_1.getSelectedRow();
+							if (ind >= 0 ) {
+								btnRemover.setEnabled(true);
+								btnAgregar.setEnabled(false);
+								String codigo = table_1.getValueAt(ind, 0).toString();
+								selected_1 = Buscar(codigo);
+							}
+						}
+					});
 					table_1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 					scrollPane_1.setViewportView(table_1);
 
@@ -261,6 +326,35 @@ public class Combox extends JDialog {
 					model_1.setColumnIdentifiers(headers);
 					table_1.setModel(model_1);
 				}
+			}
+			{
+				spnTotal = new JSpinner();
+				spnTotal.setBounds(685, 503, 97, 22);
+				panel.add(spnTotal);
+			}
+			{
+				lblTotal = new JLabel("Total:");
+				lblTotal.setBounds(647, 506, 56, 16);
+				panel.add(lblTotal);
+			}
+			{
+				spnSubtotal = new JSpinner();
+				spnSubtotal.setModel(new SpinnerNumberModel(new Float(0), new Float(0), null, new Float(1)));
+				spnSubtotal.setBounds(125, 503, 97, 22);
+				panel.add(spnSubtotal);
+			}
+			{
+				lblSubtotal = new JLabel("SubTotal:");
+				lblSubtotal.setBounds(64, 506, 62, 16);
+				panel.add(lblSubtotal);
+			}
+			{
+				lblConDe = new JLabel("Con 10% de DESCUENTO ---------->");
+				lblConDe.setHorizontalAlignment(SwingConstants.CENTER);
+				lblConDe.setForeground(SystemColor.textHighlight);
+				lblConDe.setBackground(SystemColor.info);
+				lblConDe.setBounds(336, 506, 229, 16);
+				panel.add(lblConDe);
 			}
 		}
 		{
@@ -286,8 +380,10 @@ public class Combox extends JDialog {
 				buttonPane.add(btnCancelar);
 			}
 		}
+		temporal = Tienda.getInstance().copiarArray();
 		load(0);
 		pnlAgregar.setVisible(false);
+		pnlRemover.setVisible(false);
 	}
 
 	public void load(int index) {
@@ -416,34 +512,40 @@ public class Combox extends JDialog {
 		for (Componente componente : combo.getMisComponentes()) {
 			if (componente.getNumSerie().equalsIgnoreCase(serial)) {
 				componente.setStock(stock);
+				spnSubtotal.setValue((Float.valueOf((Float) spnSubtotal.getValue())+componente.getPrecio()) * componente.getStock());
 			}
 		}
 	}
 	
-	public Componente prueba (Componente selec) {
-		Componente aux = null;
-		if(selec instanceof Motherboard){
-			 
-			aux = new Motherboard(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((Motherboard) selec).getSocket(), 
-					((Motherboard) selec).getTipo(), ((Motherboard) selec).getConexiones());
-		}
-		if(selec instanceof DiscoDuro){
-			 
-			aux = new DiscoDuro(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((DiscoDuro) selec).getCapacidad(), 
-					((DiscoDuro) selec).getTipoConexion());
-		}
-		if(selec instanceof Micro){
-			 
-			aux = new Micro(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((Micro) selec).getSocket(),
-					((Micro) selec).getVelocidad());
-		}
-		if(selec instanceof MemoriaRam){
-			 
-			aux = new MemoriaRam(selec.getNumSerie(), selec.getStock(), selec.getPrecio(), selec.getModelo(), selec.getMarca(), ((MemoriaRam) selec).getCapacidad(), 
-					((MemoriaRam) selec).getTipo());
-		}
+	public boolean existencia(Componente aux, int temp) {
 		
-		return aux;
+		for (Componente componente : combo.getMisComponentes()) {
+			if (componente.getNumSerie().equalsIgnoreCase(aux.getNumSerie())) {
+				componente.setStock(componente.getStock()+temp);
+				spnSubtotal.setValue((Float.valueOf((Float) spnSubtotal.getValue())+componente.getPrecio()) * componente.getStock());
+				return true;
+			}
+		}
+		return false;
 	}
 	
+	public void clean () {
+		spnAgregar.setValue(1);
+		btnAgregar.setEnabled(false);
+	}
+	
+	public Componente Buscar(String numSerie) {
+
+		for (Componente componente : combo.getMisComponentes()) {
+			if (componente.getNumSerie().equalsIgnoreCase(numSerie)) {
+				return componente;
+			}
+		}
+		return null;
+	}
+	
+	public void remover(Componente aux) {
+		combo.getMisComponentes().remove(aux);
+	}
+
 }
