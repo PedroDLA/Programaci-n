@@ -6,6 +6,7 @@ public class Tienda {
 	private ArrayList<Componente>misComponentes;
 	private ArrayList<Cliente>misClientes;
 	private ArrayList<Factura>misFacturas;
+	private ArrayList<Combo>misCombos;
 	public static int serial = 1;
 	public static Tienda tienda=null;
 	
@@ -14,6 +15,7 @@ public class Tienda {
 		misComponentes = new ArrayList<Componente>();
 		misClientes = new ArrayList<>();
 		misFacturas = new ArrayList<>();	
+		misCombos = new ArrayList<>();
 	}
 	
 	public static Tienda getInstance(){
@@ -50,10 +52,6 @@ public class Tienda {
 	public void RegComponente(Componente comp){
 		misComponentes.add(comp);
 		serial++;
-	}
-	public void RegistrarCliente(String nombre, String cedula, int numero ) {
-		Cliente cliente = new Cliente(nombre, cedula, numero);
-		misClientes.add(cliente);
 	}
 	
 	public Cliente ClienteByCedula(String cedula) {
@@ -96,6 +94,39 @@ public class Tienda {
 		    copia.add((Componente) comp.clone());
 		}
 		return copia;
+	}
+
+	public void registrarCliente(Cliente aux) {
+		misClientes.add(aux);
+	}
+
+	public ArrayList<Combo> copiarArrayCombo() {
+		ArrayList<Combo> copia = new ArrayList<Combo>(misCombos.size());
+		for (Combo comb : misCombos) {
+		    try {
+				copia.add((Combo) comb.clone());
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return copia;
+	}
+	public Combo copiarCombo (Combo selec) throws CloneNotSupportedException {
+		Combo aux = (Combo) selec.clone();
+		return aux;
+	}
+
+	public ArrayList<Combo> getMisCombos() {
+		return misCombos;
+	}
+
+	public void setMisCombos(ArrayList<Combo> misCombos) {
+		this.misCombos = misCombos;
+	}
+
+	public void agregarFactura(Factura nuevaFactura) {
+		misFacturas.add(nuevaFactura);
 	}
 	
 	
