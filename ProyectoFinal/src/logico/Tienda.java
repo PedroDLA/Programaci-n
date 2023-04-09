@@ -83,7 +83,23 @@ public class Tienda {
 	}
 	
 	
+	public Componente copiarComp (Componente selec) throws CloneNotSupportedException {
+		Componente aux = (Componente) selec.clone();
+		return aux;
+	}
 	
+	
+	public ArrayList<Componente> copiarArray () throws CloneNotSupportedException{
+		
+		ArrayList<Componente> copia = new ArrayList<Componente>(misComponentes.size());
+		for (Componente comp : misComponentes) {
+		    copia.add((Componente) comp.clone());
+		}
+		return copia;
+	}
+	
+	
+	/*
 	public Componente copiarComp (Componente selec) {
 		Componente aux = null;
 		if(selec instanceof Motherboard){
@@ -113,6 +129,7 @@ public class Tienda {
 	public ArrayList<Componente> copiarArray () {
 		ArrayList<Componente>aux2 = new ArrayList<Componente>();
 		Componente aux = null;
+		
 		for (Componente selec : misComponentes) {
 			
 			if(selec instanceof Motherboard){
@@ -142,5 +159,6 @@ public class Tienda {
 
 		return aux2;
 	}
+	*/
 	
 }

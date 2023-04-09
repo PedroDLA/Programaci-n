@@ -55,9 +55,10 @@ public class FacturarComplejo extends JDialog {
 	private JTextField SerietextField;
 	private JTextField textField;
 	private static ArrayList<Componente> componentesFactura = new ArrayList<Componente>();
-	private static ArrayList<Componente> temporal = Tienda.getInstance().getMisComponentes();
+	private static ArrayList<Componente> temporal = copiarPrueba();                         //Tienda.getInstance().copiarArray();
 	private  Componente selected_1 = null;
 	private JSpinner Agregarspinner = null;
+	
 	
 	/**
 	 * Launch the application.
@@ -70,12 +71,18 @@ public class FacturarComplejo extends JDialog {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 	}
 
 	/**
 	 * Create the dialog.
 	 */
 	public FacturarComplejo() {
+		try {
+		ArrayList<Componente> temporal = Tienda.getInstance().copiarArray();
+		}catch (CloneNotSupportedException e) {
+		    e.printStackTrace();
+		}
 		setBounds(100, 100, 1046, 503);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -199,7 +206,13 @@ public class FacturarComplejo extends JDialog {
 							if(componente != null && componente.getStock()>0) {
 								
 								int diferencia = 1;//Integer.valueOf((Integer)Agregarspinner.getValue());
-								selected_1 = copia(componente);
+								try {
+									selected_1 = Tienda.getInstance().copiarComp(componente);
+								} catch (CloneNotSupportedException e1) {
+									e1.printStackTrace();
+									System.out.println("Hay una palomeria vigente");
+								}
+								//selected_1 = copia(componente);
 								selected_1.setStock(diferencia);
 								componente.setStock(componente.getStock()-diferencia);
 								reescribirComponete(componente);
@@ -288,15 +301,20 @@ public class FacturarComplejo extends JDialog {
 					btnLimpiar.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							
-							
-							ArrayList<Componente> aux = componentesFactura;
-							for(Componente selected : aux) {
-								int diferencia = selected.getStock();
-								Componente componente = buscarComponenteBySerie(selected.getNumSerie());
-								componente.setStock(componente.getStock()+diferencia);
-								reescribirComponete(componente);
-								componentesFactura.remove(selected);
-								System.out.println("mmguevoooooooooooooooo");
+							ArrayList<Componente> copiaFactura = new ArrayList<Componente>();
+							for (Componente c : componentesFactura) {
+							    try {
+							        copiaFactura.add((Componente) c.clone());
+							    } catch (CloneNotSupportedException e2) {
+							        e2.printStackTrace();
+							    }
+							}
+							for (Componente selected : copiaFactura) {
+							    int cantidad = selected.getStock();
+							    Componente componente = buscarComponenteBySerie(selected.getNumSerie());
+							    componente.setStock(componente.getStock() + cantidad);
+							    reescribirComponete(componente);
+							    componentesFactura.remove(selected);
 							}
 							componentesFactura.clear();
 							load();
@@ -375,7 +393,7 @@ public class FacturarComplejo extends JDialog {
 		}
 		return aux;
 	}
-	
+	/*
 	public Componente copia(Componente selec) {
 		Componente aux = null;
 		if(selec instanceof Motherboard){
@@ -401,9 +419,18 @@ public class FacturarComplejo extends JDialog {
 		
 		return aux;
 	}
+	*/
 	
-	
-	
+	public static ArrayList<Componente> copiarPrueba() {
+			try {
+				temporal = Tienda.getInstance().copiarArray();
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		return temporal;
+	}
 	
 	public void reescribirComponete(Componente componente) {
 		

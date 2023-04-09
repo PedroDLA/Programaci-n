@@ -1,6 +1,6 @@
 package logico;
 
-public abstract class Componente {
+public abstract class Componente implements Cloneable{
 	protected  String numSerie;
 	protected int stock;
 	protected float precio;
@@ -56,8 +56,8 @@ public abstract class Componente {
 	public void setMarca(String marca) {
 		this.marca = marca;
 	}
-
-
-	
-	
+	  public Object clone() throws CloneNotSupportedException {
+	        Componente cloned = (Componente) super.clone();
+	        return cloned;
+	    }
 }
