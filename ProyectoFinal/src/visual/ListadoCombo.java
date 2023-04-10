@@ -10,6 +10,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import logico.Combo;
 import logico.Componente;
 import logico.DiscoDuro;
 import logico.MemoriaRam;
@@ -20,8 +21,6 @@ import logico.Tienda;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -30,8 +29,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
+import java.awt.Font;
 
-public class ListadoComponentes extends JDialog {
+public class ListadoCombo extends JDialog {
 
 	/**
 	 * 
@@ -41,17 +41,16 @@ public class ListadoComponentes extends JDialog {
 	private JTable table;
 	private static DefaultTableModel model;
 	private static Object rows[];
-	private JComboBox<String> comboBox;
+	private JButton btnUpdate;
 	private JButton btnDelete;
 	private JButton btnCancelar;
 	private Componente selected = null;
-	private JButton btnUpdate;
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			ListadoComponentes dialog = new ListadoComponentes();
+			ListadoCombo dialog = new ListadoCombo();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -62,8 +61,8 @@ public class ListadoComponentes extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public ListadoComponentes() {
-		setBounds(100, 100, 852, 345);
+	public ListadoCombo() {
+		setBounds(100, 100, 972, 345);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -76,20 +75,10 @@ public class ListadoComponentes extends JDialog {
 			contentPanel.add(panel, BorderLayout.NORTH);
 			panel.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 15));
 			{
-				JLabel lblTipoDeQueso = new JLabel("Tipo de Componente:");
-				lblTipoDeQueso.setHorizontalAlignment(SwingConstants.LEFT);
-				panel.add(lblTipoDeQueso);
-			}
-			{
-				comboBox = new JComboBox<String>();
-				comboBox.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						load(comboBox.getSelectedIndex());
-						
-					}
-				});
-				comboBox.setModel(new DefaultComboBoxModel<String>(new String[] {"<Todos>", "MotherBoards", "Microprocesadores", "Memorias RAM", "Discos Duros"}));
-				panel.add(comboBox);
+				JLabel lblCombos = new JLabel("Listado de Combos:");
+				lblCombos.setFont(new Font("Tahoma", Font.PLAIN, 15));
+				lblCombos.setHorizontalAlignment(SwingConstants.LEFT);
+				panel.add(lblCombos);
 			}
 		}
 		{
@@ -102,7 +91,7 @@ public class ListadoComponentes extends JDialog {
 				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 				panel.add(scrollPane, BorderLayout.CENTER);
 				{
-					String[] headers = {"Numero de serie","Marca","Modelo", "Cantidad", "Precio", "Tipo de Componente"};
+					String[] headers = {"Componentes","Nombre","Código","Precio", "Stock",};
 					
 					table = new JTable();
 					table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -150,26 +139,28 @@ public class ListadoComponentes extends JDialog {
 			}
 			
 			{
+				btnUpdate = new JButton("Modificar");
+				btnUpdate.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						ModComponente list = new ModComponente(selected.getNumSerie());
+						list.setModal(true);
+						list.setVisible(true);
+					}
+				});
+				
+				btnUpdate.setActionCommand("OK");
+				buttonPane.add(btnUpdate);
+				getRootPane().setDefaultButton(btnUpdate);
+			}
+			
+			{
 				btnCancelar = new JButton("Cancelar");
 				btnCancelar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						dispose();
 					}
 				});
-				{
-					btnUpdate = new JButton("Modificar");
-					btnUpdate.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							ModComponente list = new ModComponente(selected.getNumSerie());
-							list.setModal(true);
-							list.setVisible(true);
-							load(0);
-							
-						}
-					});
-					btnUpdate.setEnabled(false);
-					buttonPane.add(btnUpdate);
-				}
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
@@ -177,86 +168,41 @@ public class ListadoComponentes extends JDialog {
 		load(0);
 	}
 
-	public static void load(int index) {
+	public void load(int index) {
 		model.setRowCount(0);
 		rows = new Object[model.getColumnCount()];
+		int [] cont= {0,0,0,0};
 		if(index == 0){
-			for (Componente aux : Tienda.getInstance().getMisComponentes()) {
-				
-				rows[0] = aux.getNumSerie();
-				rows[1] = aux.getMarca();
-				rows[2] = aux.getModelo();
-				rows[3] = aux.getStock();
-				rows[4] = aux.getPrecio();
-				if(aux instanceof DiscoDuro ){
-					rows[5] = "Disco Duro";	
-				}
-				if(aux instanceof MemoriaRam){
-					rows[5] = "Memoria Ram";	
-				}
-				if(aux instanceof Micro ){
-					rows[5] = "Microprocesador";
-				}
-				if(aux instanceof Motherboard ){
-					rows[5] = "MotherBoard";
-				}
+			for (Combo aux : Tienda.getInstance().getMisCombos()) {
+				cont=contador(aux);
+				rows[0] = "MDR: "+cont[0]+" - DIS: " + cont[1] + " - MIC: "+cont[2]+ " - MER: "+cont[3];
+				rows[1] = aux.getNombre();
+				rows[2] = aux.getCodigo();
+				rows[3] = aux.getPrecio();
+				rows[4] = aux.getStock();
 				model.addRow(rows);
-			  
+
 			}
 		}
-		
-		if(index == 1){
-			for (Componente aux : Tienda.getInstance().getMisComponentes()) {
-				if(aux instanceof Motherboard){
-					rows[0] = aux.getNumSerie();
-					rows[1] = aux.getMarca();
-					rows[2] = aux.getModelo();
-					rows[3] = aux.getStock();
-					rows[4] = aux.getPrecio();
-					rows[5] = "MotherBoard";	
-					model.addRow(rows);
-				}
-			}	
-		}
-		if(index == 2){
-			for (Componente aux : Tienda.getInstance().getMisComponentes()) {
-				if(aux instanceof Micro){
-					rows[0] = aux.getNumSerie();
-					rows[1] = aux.getMarca();
-					rows[2] = aux.getModelo();
-					rows[3] = aux.getStock();
-					rows[4] = aux.getPrecio();
-					rows[5] = "Miroprocesador";	
-					model.addRow(rows);
-				}
-			}	
-		}
-		if(index==3){
-			for (Componente aux : Tienda.getInstance().getMisComponentes()) {
-				if(aux instanceof MemoriaRam){
-					rows[0] = aux.getNumSerie();
-					rows[1] = aux.getMarca();
-					rows[2] = aux.getModelo();
-					rows[3] = aux.getStock();
-					rows[4] = aux.getPrecio();
-					rows[5] = "Memoria Ram";	
-					model.addRow(rows);
-				}
-			}	
-		}
-		if(index==4){
-			for (Componente aux : Tienda.getInstance().getMisComponentes()) {
-				if(aux instanceof DiscoDuro){
-					rows[0] = aux.getNumSerie();
-					rows[1] = aux.getMarca();
-					rows[2] = aux.getModelo();
-					rows[3] = aux.getStock();
-					rows[4] = aux.getPrecio();
-					rows[5] = "Disco Duro";	
-					model.addRow(rows);
-				}
-			}	
-		}
 	}
-
+	
+	public int[] contador(Combo aux) {
+		int[] cont= {0,0,0,0};
+		for (Componente comp : aux.getMisComponentes()) {
+			if(comp instanceof Motherboard){
+				cont[0]++;
+			}
+			if(comp instanceof DiscoDuro){
+				cont[1]++;
+			}
+			if(comp instanceof Micro){
+				cont[2]++;
+			}
+			if(comp instanceof MemoriaRam){
+				cont[3]++;
+			}
+		}
+		return cont;
+	}
+	
 }
