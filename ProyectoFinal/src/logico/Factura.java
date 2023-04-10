@@ -7,13 +7,15 @@ public class Factura {
 	private ArrayList<Componente> misComponentes;
 	private ArrayList<Combo>misCombos;
 	private Cliente cliente;
+	private String monto;
 	
-	public Factura(String codigo, ArrayList<Componente> misComponentes,ArrayList<Combo>misCombos, Cliente cliente) {
+	public Factura(String codigo, ArrayList<Componente> misComponentes,ArrayList<Combo>misCombos, Cliente cliente, String monto) {
 		super();
 		this.codigo = codigo;
 		this.misComponentes = misComponentes;
 		this.cliente = cliente;
 		this.misCombos = misCombos;
+		this.monto = monto;
 	}
 
 	public String getCodigo() {
@@ -46,5 +48,13 @@ public class Factura {
 
 	public void setMisCombos(ArrayList<Combo> misCombos) {
 		this.misCombos = misCombos;
+	}
+
+	public String getMonto() {
+		return monto;
+	}
+
+	public void setMonto(String monto) {
+		this.monto = monto;
 	}
 }

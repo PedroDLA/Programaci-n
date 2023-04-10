@@ -35,6 +35,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.JTextField;
 import javax.swing.JSpinner;
 
@@ -58,7 +59,7 @@ public class FacturarComplejo extends JDialog {
 	private JTextField txtTelefono;
 	private JTextField txtDireccion;
 	private JTextField SerietextField;
-	private JTextField textField;
+	private static JTextField txtTotal;
 	private static ArrayList<Componente> componentesFactura = new ArrayList<Componente>();
 	private static ArrayList<Componente> temporal = copiarPrueba();                         //Tienda.getInstance().copiarArray();
 	
@@ -89,11 +90,8 @@ public class FacturarComplejo extends JDialog {
 	 * Create the dialog.
 	 */
 	public FacturarComplejo() {
-		try {
-		ArrayList<Componente> temporal = Tienda.getInstance().copiarArray();
-		}catch (CloneNotSupportedException e) {
-		    e.printStackTrace();
-		}
+		
+		
 		setBounds(100, 100, 1046, 503);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -124,9 +122,10 @@ public class FacturarComplejo extends JDialog {
 								
 								btnSetear.setEnabled(true);
 								String codigo = table.getValueAt(ind, 0).toString();
-								
+								int stock = (int) table.getValueAt(ind, 4);
 								selected = buscarComponenteBySerieFactura(codigo);
 								selectedC = buscarComboByCodigo(codigo);
+								Agregarspinner.setValue(selected != null ? selected.getStock() : selectedC.getStock());
 							}
 						}
 					});
@@ -285,11 +284,11 @@ public class FacturarComplejo extends JDialog {
 				panel.add(lblTotal);
 			}
 			{
-				textField = new JTextField();
-				textField.setEditable(false);
-				textField.setColumns(10);
-				textField.setBounds(676, 390, 115, 23);
-				panel.add(textField);
+				txtTotal = new JTextField();
+				txtTotal.setEditable(false);
+				txtTotal.setColumns(10);
+				txtTotal.setBounds(676, 390, 115, 23);
+				panel.add(txtTotal);
 			}
 			{
 				JLabel lblNuemroDeSerie = new JLabel("Cantidad por articulo:");
@@ -306,15 +305,18 @@ public class FacturarComplejo extends JDialog {
 				btnSetear.setEnabled(false);
 				btnSetear.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						
-						selected.setStock(Integer.valueOf((Integer)Agregarspinner.getValue()));
-						load();
-						
-					}
+							
+							selected.setStock((Integer) Agregarspinner.getValue());
+					        Agregarspinner.setValue(0);
+					        load();
+					    }
+				
+					
 				});
 				btnSetear.setBounds(337, 390, 72, 25);
 				panel.add(btnSetear);
 			}
+	
 		}
 		{
 			
@@ -361,7 +363,6 @@ public class FacturarComplejo extends JDialog {
 				});
 				{
 					btnLimpiar = new JButton("Limpiar");
-					btnLimpiar.setEnabled(false);
 					btnLimpiar.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
 							
@@ -411,11 +412,10 @@ public class FacturarComplejo extends JDialog {
 								JOptionPane.showMessageDialog(null, "Operacion Exitosa", "Informacion", JOptionPane.INFORMATION_MESSAGE);
 								//clear();
 								String codigo = "Fa-"+Tienda.getInstance().getMisFacturas().size();
-								Factura nuevaFactura = new Factura(codigo,temporal,combosFactura, aux );
+								Factura nuevaFactura = new Factura(codigo,temporal,combosFactura, aux, txtTotal.getText() );
 								Tienda.getInstance().agregarFactura(nuevaFactura);
 							}
 						});
-						btnFacturar.setEnabled(false);
 						buttonPane.add(btnFacturar);
 					}
 					buttonPane.add(btnLimpiar);
@@ -440,7 +440,7 @@ public class FacturarComplejo extends JDialog {
 	public static void load() {
 		model.setRowCount(0);
 		rows = new Object[model.getColumnCount()];
-		
+		float total = 0;
 			for (Componente aux : componentesFactura) {
 				
 				rows[0] = aux.getNumSerie();
@@ -462,6 +462,7 @@ public class FacturarComplejo extends JDialog {
 					rows[1] = "MotherBoard";
 				}
 				model.addRow(rows);
+				total += aux.getPrecio()*aux.getStock();
 			}
 			for (Combo aux : combosFactura) {
 				
@@ -473,7 +474,12 @@ public class FacturarComplejo extends JDialog {
 				rows[5] = 
 				rows[6] = aux.getPrecio();
 				model.addRow(rows);
+				total += aux.getPrecio();
 			}
+			String txt = Float.toString(total);
+			txtTotal.setText(txt);
+			
+			
 			
 	}	
 	public Componente buscarComponenteBySerie(String serie) {
@@ -554,8 +560,32 @@ public class FacturarComplejo extends JDialog {
 		
 		
 	}
-	
-	
+	public void reescribirFacturaComp(Componente componente) {
+		   int index = componentesFactura.indexOf(componente);
+		    if (index >= 0) {
+		        componentesFactura.set(index, componente);
+		    }
+		
+	}
+	public void reescribirFacturaComb(Combo combo) {
+		
+		ArrayList<Combo> copia = new ArrayList<Combo>();
+		for (Combo c : combosFactura) {
+		    try {
+		        copia.add((Combo) c.clone());
+		    } catch (CloneNotSupportedException e2) {
+		        e2.printStackTrace();
+		    }
+		}
+		for(Combo combos: copia) {
+			if(combos == combo) {
+				combosFactura.remove(combos);
+				combosFactura.add(combo);
+			}
+		}
+		
+		
+	}
 	
 	
 	
