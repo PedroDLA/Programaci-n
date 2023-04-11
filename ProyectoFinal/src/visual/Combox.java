@@ -190,7 +190,7 @@ public class Combox extends JDialog {
 					textPnlAviso.setText("Cu\u00E1ntos art\u00EDculos deseas a\u00F1adir al combo?\r\n\r\nNo deben exceder la cantidad actual en existencia!");
 					textPnlAviso.setEditable(false);
 					textPnlAviso.setBackground(SystemColor.info);
-					textPnlAviso.setBounds(12, 32, 179, 86);
+					textPnlAviso.setBounds(12, 32, 179, 99);
 					pnlAgregar.add(textPnlAviso);
 				}
 				{
@@ -265,7 +265,7 @@ public class Combox extends JDialog {
 					txtpnCuntosArtculosDeseas.setText("Cu\u00E1ntos art\u00EDculos deseas remover del combo?\r\n\r\nNo deben exceder la cantidad actual en existencia!");
 					txtpnCuntosArtculosDeseas.setEditable(false);
 					txtpnCuntosArtculosDeseas.setBackground(SystemColor.info);
-					txtpnCuntosArtculosDeseas.setBounds(12, 32, 179, 86);
+					txtpnCuntosArtculosDeseas.setBounds(12, 32, 179, 93);
 					pnlRemover.add(txtpnCuntosArtculosDeseas);
 				}
 				{

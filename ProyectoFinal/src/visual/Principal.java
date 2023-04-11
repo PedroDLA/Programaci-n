@@ -110,7 +110,9 @@ public class Principal extends JFrame {
 		JMenuItem mntmListadoFacturas = new JMenuItem("Listado Facturas");
 		mntmListadoFacturas.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				ListadoFactura factura = new ListadoFactura();
+				factura.setModal(true);
+				factura.setVisible(true);
 			}
 		});
 		
@@ -122,6 +124,16 @@ public class Principal extends JFrame {
 		});
 		mmAdministrador.add(mntmDetalleVentas);
 		mmAdministrador.add(mntmListadoFacturas);
+		
+		JMenuItem mntmListadoClientes = new JMenuItem("Listado Clientes");
+		mntmListadoClientes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListadoCliente cliente = new ListadoCliente();
+				cliente.setModal(true);
+				cliente.setVisible(true);
+			}
+		});
+		mmAdministrador.add(mntmListadoClientes);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));

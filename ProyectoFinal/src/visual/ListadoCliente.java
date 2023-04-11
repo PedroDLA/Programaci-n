@@ -11,7 +11,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import logico.Cliente;
-import logico.Factura;
 import logico.Tienda;
 
 import javax.swing.JLabel;
@@ -27,13 +26,13 @@ import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class ListadoFactura extends JDialog {
+public class ListadoCliente extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
 	private static DefaultTableModel model;
 	private static Object rows[];
-	private final JLabel lblListadoDeClientes = new JLabel("Listado de Facturas:");
+	private final JLabel lblListadoDeClientes = new JLabel("Listado de Clientes:");
 	private Cliente selected = null;
 
 	/**
@@ -41,7 +40,7 @@ public class ListadoFactura extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			ListadoFactura dialog = new ListadoFactura();
+			ListadoCliente dialog = new ListadoCliente();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -52,8 +51,8 @@ public class ListadoFactura extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public ListadoFactura() {
-		setBounds(100, 100, 693, 345);
+	public ListadoCliente() {
+		setBounds(100, 100, 581, 345);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -68,7 +67,7 @@ public class ListadoFactura extends JDialog {
 				JScrollPane scrollPane = new JScrollPane();
 				panel.add(scrollPane, BorderLayout.CENTER);
 				{
-					String[] headers = {"Cedula","Cliente","Cantidad de componentes","Cantidad de combos","Total"};
+					String[] headers = {"Cedula","Nombre","Telefono"};
 
 					table = new JTable();
 					table.addMouseListener(new MouseAdapter() {
@@ -107,22 +106,24 @@ public class ListadoFactura extends JDialog {
 				buttonPane.add(btnCancelar);
 			}
 		}
-		loadClientes();
+		loadClientes(0);
 	}
 
-	public static void loadClientes() {
+	public static void loadClientes(int index) {
 		model.setRowCount(0);
 		rows = new Object[model.getColumnCount()];
-			for (Factura aux : Tienda.getInstance().getMisFacturas()) {
-				if(aux != null){
-				rows[0] = aux.getCodigo();
-				rows[1] = aux.getCliente().getNombre();
-				rows[2] = aux.getMisComponentes().size();
-				rows[3] = aux.getMisCombos().size();
-				rows[4] = aux.getMonto();
+		if(index == 0){
+			for (Cliente aux : Tienda.getInstance().getMisClientes()) {
+				if(aux != null){	
+				rows[0] = aux.getCedula();
+				rows[1] = aux.getNombre();
+				rows[2] = aux.getTelefono();
 				model.addRow(rows);
 			  }
 			}
+		}
+		
+
 	}
 
 }
