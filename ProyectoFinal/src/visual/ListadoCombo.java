@@ -63,6 +63,7 @@ public class ListadoCombo extends JDialog {
 	 * Create the dialog.
 	 */
 	public ListadoCombo() {
+		System.out.println(Tienda.getInstance().getMisCombos().size());
 		setBounds(100, 100, 972, 345);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -92,7 +93,7 @@ public class ListadoCombo extends JDialog {
 				scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 				panel.add(scrollPane, BorderLayout.CENTER);
 				{
-					String[] headers = {"Componentes","Nombre","Código","Precio", "Stock",};
+					String[] headers = {"Componentes","Nombre","Cï¿½digo","Precio", "Stock",};
 					
 					table = new JTable();
 					table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -184,7 +185,7 @@ public class ListadoCombo extends JDialog {
 		}
 	}
 	
-	public int[] contador(Combo aux) {
+	public static int[] contador(Combo aux) {
 		int[] cont= {0,0,0,0};
 		for (Componente comp : aux.getMisComponentes()) {
 			if(comp instanceof Motherboard){

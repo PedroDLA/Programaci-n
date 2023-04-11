@@ -415,7 +415,11 @@ public class ModComponente extends JDialog {
 							aux = new MemoriaRam(serial, stock, precio, modelo, marca, capacidad, tipo);
 						}
 						guardar(aux);
-						JOptionPane.showMessageDialog(null, "Modificación Exitosa", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+						Tienda.getInstance().guardarClientesEnArchivo();
+						Tienda.getInstance().guardarCombosEnArchivo();
+						Tienda.getInstance().guardarComponentesEnArchivo();
+						Tienda.getInstance().guardarFacturasEnArchivo();
+						JOptionPane.showMessageDialog(null, "Modificaciï¿½n Exitosa", "Informacion", JOptionPane.INFORMATION_MESSAGE);
 						dispose();
 					}
 

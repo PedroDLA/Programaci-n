@@ -1,6 +1,9 @@
 package logico;
 
-public abstract class Componente implements Cloneable{
+import java.io.Serializable;
+
+public abstract class Componente implements Cloneable,Serializable{
+	private static final long serialVersionUID = -3947030900384762237L;
 	protected  String numSerie;
 	protected int stock;
 	protected float precio;

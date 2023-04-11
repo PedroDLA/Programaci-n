@@ -468,6 +468,10 @@ public class Combox extends JDialog {
 							}
 							Tienda.getInstance().getMisCombos().add(aux);
 							JOptionPane.showMessageDialog(null, "Registro Exitoso", "AVISO", JOptionPane.INFORMATION_MESSAGE);
+							
+							
+							Tienda.getInstance().guardarCombosEnArchivo();
+							
 							Reset();
 							load(0);
 							load2();
@@ -731,7 +735,7 @@ public class Combox extends JDialog {
 	
 	public void Reset() {
 		textNombreCombo.setText(" ");
-		spnSubtotal.setValue(0);
+		spnSubtotal.setValue(0.0);
 		//spnTotal.setValue(0);
 		misComponentes.clear();
 		spnStock.setValue(1);

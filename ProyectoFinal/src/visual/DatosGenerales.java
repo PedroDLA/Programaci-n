@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import logico.Tienda;
 
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -228,25 +229,32 @@ public class DatosGenerales extends JDialog {
 	}
 	public void load() {
 		
-		String cantcilindro = Integer.toString(TiendaQueso.getInstance().buscarCantQuesos("cilindro"));
-		mdrCant.setText(cantcilindro);
+		String cantmdr = Integer.toString(Tienda.getInstance().cantMotherBoard());
+		mdrCant.setText(cantmdr);
 		//-----------------------------------
-		String cantcilindroh = Integer.toString(TiendaQueso.getInstance().buscarCantQuesos("cilindroh"));
-		RamCant.setText(cantcilindroh);
+		String cantram = Integer.toString(Tienda.getInstance().cantRam());
+		RamCant.setText(cantram);
 		//-----------------------------------
-		String cantesfera = Integer.toString(TiendaQueso.getInstance().buscarCantQuesos("esfera"));
-		disCant.setText(cantesfera);
+		String cantdis = Integer.toString(Tienda.getInstance().cantDiscoDuro());
+		disCant.setText(cantdis);
 		//-----------------------------------
-		String dinerocilindro = Float.toString(TiendaQueso.getInstance().buscarDineroQuesos("cilindro"));
-		discash.setText(dinerocilindro);
+		String cantmr = Integer.toString(Tienda.getInstance().cantMicro());
+		mrcant.setText(cantmr);
+		
+		
+		String dinerodis = Float.toString(Tienda.getInstance().gananciaDiscoDuro());
+		discash.setText(dinerodis);
 		//-----------------------------------
-		String dinerocilindroh = Float.toString(TiendaQueso.getInstance().buscarDineroQuesos("cilindroh"));
-		mrcash.setText(dinerocilindroh);
+		String dineromr = Float.toString(Tienda.getInstance().gananciaMicro());
+		mrcash.setText(dineromr);
 		//-----------------------------------
-		String dineroesfera = Float.toString(TiendaQueso.getInstance().buscarDineroQuesos("esfera"));
-		ramcash.setText(dineroesfera);
+		String dineroram = Float.toString(Tienda.getInstance().gananciaRam());
+		ramcash.setText(dineroram);
 		//-----------------------------------
-		String total = Float.toString(TiendaQueso.getInstance().totalDeVentas());
+		String dineromdr = Float.toString(Tienda.getInstance().gananciaMotherBoard());
+		mdrcash.setText(dineromdr);
+		
+		String total = Float.toString(Tienda.getInstance().totalGanancia());
 		totalVentas.setText(total);
 	}
 }

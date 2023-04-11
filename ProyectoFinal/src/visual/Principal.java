@@ -5,6 +5,13 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -16,6 +23,14 @@ import javax.swing.border.TitledBorder;
 
 public class Principal extends JFrame {
 
+	
+	
+	
+
+	
+	static Socket sfd = null;
+	static DataInputStream EntradaSocket;
+	static DataOutputStream SalidaSocket;
 	/**
 	 * 
 	 */
@@ -109,41 +124,94 @@ public class Principal extends JFrame {
 		JMenu mmAdministrador = new JMenu("Administrador");
 		menuBar.add(mmAdministrador);
 		
-		JMenuItem mntmComponentesVendidos = new JMenuItem("Componentes Vendidos");
-		mntmComponentesVendidos.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-		mmAdministrador.add(mntmComponentesVendidos);
-		
-		JMenuItem mntmListadoFacturas = new JMenuItem("Listado Facturas");
-		mntmListadoFacturas.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ListadoFactura factura = new ListadoFactura();
-				factura.setModal(true);
-				factura.setVisible(true);
-			}
-		});
-		
-		JMenuItem mntmDetalleVentas = new JMenuItem("Detalle Ventas");
-		mntmDetalleVentas.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-			}
-		});
-		mmAdministrador.add(mntmDetalleVentas);
-		mmAdministrador.add(mntmListadoFacturas);
-		
-		JMenuItem mntmListadoClientes = new JMenuItem("Listado Clientes");
+		JMenuItem mntmListadoClientes = new JMenuItem("Datos Generales");
 		mntmListadoClientes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ListadoCliente cliente = new ListadoCliente();
-				cliente.setModal(true);
-				cliente.setVisible(true);
+				DatosGenerales datos = new DatosGenerales();
+				datos.setModal(true);
+				datos.setVisible(true);
 			}
 		});
 		mmAdministrador.add(mntmListadoClientes);
+		
+		JMenuItem mntmRegistrarUsuario = new JMenuItem("Registrar Usuario");
+		mntmRegistrarUsuario.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegUser reg = new RegUser();
+				reg.setModal(true);
+				reg.setVisible(true);
+				
+			}
+		});
+		mmAdministrador.add(mntmRegistrarUsuario);
+		
+		JMenuItem mntmListadoClientes_1 = new JMenuItem("Listado clientes");
+		mntmListadoClientes_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListadoCliente list = new ListadoCliente();
+				list.setModal(true);
+				list.setVisible(true);
+				
+			}
+		});
+		mmAdministrador.add(mntmListadoClientes_1);
+		
+		JMenuItem mntmListadoFactura = new JMenuItem("Listado Factura");
+		mntmListadoFactura.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListadoFactura list = new ListadoFactura();
+				list.setModal(true);
+				list.setVisible(true);
+			}
+		});
+		mmAdministrador.add(mntmListadoFactura);
+		
+		JMenu mnRespaldar = new JMenu("Respaldar");
+		menuBar.add(mnRespaldar);
+		
+		JMenuItem mntmRespaldar = new JMenuItem("Respaldar");
+		mntmRespaldar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try
+			    {
+			      sfd = new Socket("127.0.0.1",7000);
+			       DataInputStream aux=new DataInputStream(new FileInputStream(new File("empresa.dat")));
+			     // EntradaSocket = new DataInputStream(new FileInputStream(sfd.getInputStream()));
+			      SalidaSocket = new DataOutputStream((sfd.getOutputStream()));
+			      String ejemplo = new String("Esto es una prueba nueva");
+			      int unByte;
+			      try
+			      {
+			        //SalidaSocket.writeUTF(ejemplo);
+			       // SalidaSocket.flush();
+			    	  
+			    	  while((unByte=aux.read()) != -1) {
+			    		  SalidaSocket.write(unByte);
+			          	SalidaSocket.flush();
+			          	}
+			      }
+			      catch (IOException ioe)
+			      {
+			        System.out.println("Error: "+ioe);
+			      }
+			    }
+			    catch (UnknownHostException uhe)
+			    {
+			      System.out.println("No se puede acceder al servidor.");
+			      System.exit(1);
+			    }
+			    catch (IOException ioe)
+			    {
+			      System.out.println("Comunicaci�n rechazada.");
+			      System.exit(1);
+			    }
+				
+				
+				
+			}
+			
+		});
+		mnRespaldar.add(mntmRespaldar);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
