@@ -408,6 +408,10 @@ public class RegistrarComponente extends JDialog {
 						Tienda.getInstance().RegComponente(aux);
 						JOptionPane.showMessageDialog(null, "Operacion Exitosa", "Informacion", JOptionPane.INFORMATION_MESSAGE);
 						clean();
+						Tienda.getInstance().guardarClientesEnArchivo();
+						Tienda.getInstance().guardarCombosEnArchivo();
+						Tienda.getInstance().guardarComponentesEnArchivo();
+						Tienda.getInstance().guardarFacturasEnArchivo();
 					}
 
 				});

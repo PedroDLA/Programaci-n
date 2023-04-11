@@ -456,6 +456,11 @@ public class Combox extends JDialog {
 							}
 							Tienda.getInstance().getMisCombos().add(aux);
 							JOptionPane.showMessageDialog(null, "Registro Exitoso", "AVISO", JOptionPane.INFORMATION_MESSAGE);
+							
+							Tienda.getInstance().guardarClientesEnArchivo();
+							Tienda.getInstance().guardarCombosEnArchivo();
+							Tienda.getInstance().guardarComponentesEnArchivo();
+							Tienda.getInstance().guardarFacturasEnArchivo();
 							Reset();
 							load(0);
 							load2();
