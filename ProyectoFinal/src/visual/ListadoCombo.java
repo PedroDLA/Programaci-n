@@ -24,6 +24,7 @@ import javax.swing.SwingConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -41,10 +42,10 @@ public class ListadoCombo extends JDialog {
 	private JTable table;
 	private static DefaultTableModel model;
 	private static Object rows[];
-	private JButton btnUpdate;
 	private JButton btnDelete;
 	private JButton btnCancelar;
-	private Componente selected = null;
+	private Combo selected = null;
+	private JButton btnUpdate;
 	/**
 	 * Launch the application.
 	 */
@@ -103,8 +104,9 @@ public class ListadoCombo extends JDialog {
 								btnDelete.setEnabled(true);
 								btnUpdate.setEnabled(true);
 								String codigo = table.getValueAt(ind, 0).toString();
-								 selected = Tienda.getInstance().ComponenteByCodigo(codigo);
+								 selected = CombobyCodigo(codigo);
 							}
+							System.out.println(selected.getCodigo()+"1");
 						}
 					});
 					model = new DefaultTableModel();
@@ -129,7 +131,7 @@ public class ListadoCombo extends JDialog {
 									"Estas seguro de querer eliminar el Companente",
 									"Eliminar Componente", JOptionPane.OK_CANCEL_OPTION);
 							if(option == JOptionPane.OK_OPTION) {
-								Tienda.getInstance().eliminarComponente(selected);
+								EliminarCombo(selected);
 								load(0);
 							}
 						}
@@ -139,28 +141,26 @@ public class ListadoCombo extends JDialog {
 			}
 			
 			{
-				btnUpdate = new JButton("Modificar");
-				btnUpdate.addMouseListener(new MouseAdapter() {
-					@Override
-					public void mouseClicked(MouseEvent e) {
-						ModComponente list = new ModComponente(selected.getNumSerie());
-						list.setModal(true);
-						list.setVisible(true);
-					}
-				});
-				
-				btnUpdate.setActionCommand("OK");
-				buttonPane.add(btnUpdate);
-				getRootPane().setDefaultButton(btnUpdate);
-			}
-			
-			{
 				btnCancelar = new JButton("Cancelar");
 				btnCancelar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						dispose();
 					}
 				});
+				{
+					btnUpdate = new JButton("Modificar");
+					btnUpdate.setEnabled(false);
+					btnUpdate.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							System.out.println(selected.getCodigo());
+							ModCombo list = new ModCombo(selected);
+							list.setModal(true);
+							list.setVisible(true);
+							load(0);
+						}
+					});
+					buttonPane.add(btnUpdate);
+				}
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
@@ -203,6 +203,24 @@ public class ListadoCombo extends JDialog {
 			}
 		}
 		return cont;
+	}
+	
+	public Combo CombobyCodigo(String serial) {
+		for(Combo comb : Tienda.getInstance().getMisCombos()) {
+			if(comb.getCodigo().equalsIgnoreCase(serial)) {
+				return comb;
+			}
+		}
+		return null;
+	}
+	
+	public void EliminarCombo(Combo comb) {
+		ArrayList<Combo> temporal = Tienda.getInstance().getMisCombos();
+		for(Combo aux : temporal) {
+			if(aux.getCodigo().equalsIgnoreCase(comb.getCodigo())) {
+				Tienda.getInstance().getMisCombos().remove(comb);
+			}
+		}
 	}
 	
 }
