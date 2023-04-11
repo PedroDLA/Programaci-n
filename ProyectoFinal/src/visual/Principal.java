@@ -83,6 +83,16 @@ public class Principal extends JFrame {
 			}
 		});
 		mnComponentes.add(mntmElaborarCombo);
+		
+		JMenuItem mntmListadoDeCombos = new JMenuItem("Listado de Combos");
+		mntmListadoDeCombos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ListadoCombo combo = new ListadoCombo();
+				combo.setModal(true);
+				combo.setVisible(true);
+			}
+		});
+		mnComponentes.add(mntmListadoDeCombos);
 		JMenu mnVentas = new JMenu("Ventas");
 		menuBar.add(mnVentas);
 		
