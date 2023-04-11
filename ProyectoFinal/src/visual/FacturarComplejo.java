@@ -486,10 +486,17 @@ public class FacturarComplejo extends JDialog {
 								//clear();
 								
 								String codigo = "Fa-"+Tienda.getInstance().getMisFacturas().size();
+								
+								
+								
+								
+								
 								Factura nuevaFactura = new Factura(codigo,faccomp,combofac, auxCliente, txtTotal.getText() );
 								Tienda.getInstance().setMisCombos(combosTemp);
 								Tienda.getInstance().setMisComponentes(temporal);
 								Tienda.getInstance().agregarFactura(nuevaFactura);
+								
+								
 								
 								Tienda.getInstance().guardarClientesEnArchivo();
 								Tienda.getInstance().guardarCombosEnArchivo();
@@ -521,7 +528,6 @@ public class FacturarComplejo extends JDialog {
 		}
 		
 		load();
-		
 	}
 
 	public static void load() {

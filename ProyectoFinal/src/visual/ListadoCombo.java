@@ -104,10 +104,9 @@ public class ListadoCombo extends JDialog {
 							if (ind >= 0 ) {
 								btnDelete.setEnabled(true);
 								btnUpdate.setEnabled(true);
-								String codigo = table.getValueAt(ind, 0).toString();
-								 selected = CombobyCodigo(codigo);
+								String codigo = table.getValueAt(ind, 2).toString();
+								selected = Tienda.getInstance().CombobyCodigo(codigo);
 							}
-							System.out.println(selected.getCodigo()+"1");
 						}
 					});
 					model = new DefaultTableModel();
@@ -117,8 +116,7 @@ public class ListadoCombo extends JDialog {
 				}
 			}
 		}
-		{
-			
+		{	
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -152,9 +150,8 @@ public class ListadoCombo extends JDialog {
 					btnUpdate = new JButton("Modificar");
 					btnUpdate.setEnabled(false);
 					btnUpdate.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent e) {
-							System.out.println(selected.getCodigo());
-							ModCombo list = new ModCombo(selected);
+						public void actionPerformed(ActionEvent e) {							
+							ModificarCombo list = new ModificarCombo(selected.getCodigo());
 							list.setModal(true);
 							list.setVisible(true);
 							load(0);
@@ -164,6 +161,7 @@ public class ListadoCombo extends JDialog {
 				}
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
+			
 			}
 		}
 		load(0);
@@ -204,15 +202,6 @@ public class ListadoCombo extends JDialog {
 			}
 		}
 		return cont;
-	}
-	
-	public Combo CombobyCodigo(String serial) {
-		for(Combo comb : Tienda.getInstance().getMisCombos()) {
-			if(comb.getCodigo().equalsIgnoreCase(serial)) {
-				return comb;
-			}
-		}
-		return null;
 	}
 	
 	public void EliminarCombo(Combo comb) {

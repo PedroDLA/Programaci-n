@@ -39,7 +39,7 @@ import logico.Tienda;
 import java.awt.Font;
 import javax.swing.JTextField;
 
-public class ModCombo extends JDialog {
+public class ModificarCombo extends JDialog {
 
 	/**
 	 * 
@@ -65,6 +65,7 @@ public class ModCombo extends JDialog {
 	private JSpinner spnRemover;
 	private JButton btnCrear;
 	private JButton btnRemover;
+	private ArrayList <Componente> temporal = FacturarComplejo.copiarPrueba();
 	private JButton btnAceptar;
 	private JButton btnAceptar_1;
 	private JTable table_1;
@@ -83,7 +84,7 @@ public class ModCombo extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			ModCombo dialog = new ModCombo(null);
+			ModificarCombo dialog = new ModificarCombo(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -94,22 +95,11 @@ public class ModCombo extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public ModCombo(Combo combo) {
+	public ModificarCombo(String sele) {
+		Combo copy = Tienda.getInstance().CombobyCodigo(sele);
 		
-		Combo ejemplo = combo;
-		
-		
-		ArrayList<Componente> componentes = new ArrayList<Componente>();
-		try {
-			componentes = copiar(ejemplo);
-		} catch (CloneNotSupportedException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
-		
-		Combo copia = new Combo(componentes,null,null,0,0);
-		ArrayList<Componente>temporal = new ArrayList<Componente>();
-		Combo auxiliar = new Combo(temporal,null,null,0,0);//Este es el que llenaré de nuevos datos y cargaré al arreglo en tienda
+		Combo combo= new Combo (copiarListaProfunda(copy.getMisComponentes()), null, null, 0,0);
+
 		setBounds(100, 100, 845, 736);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -131,7 +121,7 @@ public class ModCombo extends JDialog {
 				comboBox = new JComboBox<String>();
 				comboBox.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						load(comboBox.getSelectedIndex(), copia.getMisComponentes());
+						load(comboBox.getSelectedIndex());
 
 					}
 				});
@@ -139,6 +129,7 @@ public class ModCombo extends JDialog {
 				panel.add(comboBox);
 			}
 		}
+
 
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -165,9 +156,9 @@ public class ModCombo extends JDialog {
 							pnlAgregar.setVisible(false);
 							pnlRemover.setVisible(false);
 							String codigo = table.getValueAt(ind, 0).toString();
-							selected = temporalByCodigo(codigo, copia);
+							selected = temporalByCodigo(codigo);
 						}
-						spnAgregar.setModel(new SpinnerNumberModel(1, 1, selected.getStock(), 1));
+						//spnAgregar.setModel(new SpinnerNumberModel(1, 1, selected.getStock(), 1));
 
 					}
 
@@ -177,8 +168,8 @@ public class ModCombo extends JDialog {
 				table.setModel(model);
 
 			}
-		}
 
+		}
 
 		{
 			btnAgregar = new JButton("Agregar");
@@ -191,10 +182,9 @@ public class ModCombo extends JDialog {
 						panel.setComponentZOrder(pnlAgregar, 0);
 					}
 					else {
-						JOptionPane.showMessageDialog(null, "Stock Vacï¿½o!!!", "AVISO", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Stock VacÃ¯Â¿Â½o!!!", "AVISO", JOptionPane.INFORMATION_MESSAGE);
 
 					}
-
 				}
 			});
 			btnAgregar.setEnabled(false);
@@ -236,32 +226,36 @@ public class ModCombo extends JDialog {
 							e1.printStackTrace();
 						}
 
-						boolean control = existencia(selected_1,temp,auxiliar);
+						boolean control = existencia(selected_1,temp, combo);
 
 						if (!control) {	
 							combo.getMisComponentes().add(selected_1);
-							modCombo(selected_1.getNumSerie(),temp,auxiliar);
+							modCombo(selected_1.getNumSerie(),temp, combo);
 						}
 
-						selected.setStock(selected.getStock() - temp);
-						modTemporal(selected, copia);
+						if (temp < selected.getStock()) {
+							agregar(selected, combo, 1, temp);
+						}
+						if (temp == selected.getStock()) {
+							agregar(selected, combo, 2, temp);
+						}
 
 						pnlAgregar.setVisible(false);
 						btnAgregar.setVisible(true);
 
 						if (combo.getMisComponentes().size() > 0) {
-							load2(auxiliar);
+							load2(combo);
 							btnCrear.setEnabled(true);
 						}
-						load(0,copia.getMisComponentes());
+						load(0);
 						spnAgregar.setValue(0);
 					}
-						
-						pnlAgregar.setVisible(false);
-						btnAgregar.setVisible(true);
-						btnAgregar.setEnabled(false);
-						clean();
-					
+
+					pnlAgregar.setVisible(false);
+					btnAgregar.setVisible(true);
+					btnAgregar.setEnabled(false);
+					clean();
+
 				}
 			});
 			btnAceptar.setFont(new Font("Tahoma", Font.PLAIN, 11));
@@ -277,12 +271,14 @@ public class ModCombo extends JDialog {
 			pnlRemover.setBounds(834, 198, 229, 172);
 			panel.add(pnlRemover);
 			{
+
 				txtpnCuntosArtculosDeseas = new JTextPane();
 				txtpnCuntosArtculosDeseas.setText("Cu\u00E1ntos art\u00EDculos deseas remover del combo?\r\n\r\nNo deben exceder la cantidad actual en existencia!");
 				txtpnCuntosArtculosDeseas.setEditable(false);
 				txtpnCuntosArtculosDeseas.setBackground(SystemColor.info);
 				txtpnCuntosArtculosDeseas.setBounds(12, 32, 179, 86);
 				pnlRemover.add(txtpnCuntosArtculosDeseas);
+
 			}
 			{
 				spnRemover = new JSpinner();
@@ -295,18 +291,25 @@ public class ModCombo extends JDialog {
 				btnAceptar_1.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						int temp = Integer.valueOf((Integer)spnRemover.getValue());
+						boolean control = modTemporal(selected_1, temp);
+
+						if (!control) {	
+							temporal.add(selected_1);
+							modOficial(selected.getNumSerie(),temp);
+						}
+
 						if (temp < selected_1.getStock()) {
-							remover(selected_1, 1, temp, auxiliar);
+							remover(selected_1, 1, temp, combo);
 						}
 						if (temp == selected_1.getStock()) {
-							remover(selected_1, 2, temp, auxiliar);
+							remover(selected_1, 2, temp, combo);
 						}
 
 						pnlRemover.setVisible(false);
 						btnRemover.setVisible(true);
 						btnRemover.setEnabled(false);
-						load(0,copia.getMisComponentes());
-						load2(auxiliar);
+						load(0);
+						load2(combo);
 						if (combo.getMisComponentes().size() > 0) {
 							btnCrear.setEnabled(true);
 						}
@@ -353,7 +356,7 @@ public class ModCombo extends JDialog {
 							pnlAgregar.setVisible(false);
 							pnlRemover.setVisible(false);
 							String codigo = table_1.getValueAt(ind, 0).toString();
-							selected_1 = Buscar(codigo, auxiliar);
+							selected_1 = Buscar(codigo,combo);
 						}
 						spnRemover.setModel(new SpinnerNumberModel(1, 1, selected_1.getStock(), 1));
 
@@ -416,7 +419,7 @@ public class ModCombo extends JDialog {
 		panel.add(lblNumSer);
 
 		textSerial = new JTextField();
-		textSerial.setText(combo.getCodigo());
+		textSerial.setText(codigo);
 		textSerial.setEditable(false);
 		textSerial.setBounds(706, 13, 116, 22);
 		panel.add(textSerial);
@@ -449,36 +452,36 @@ public class ModCombo extends JDialog {
 					btnCrear = new JButton("Crear");
 					btnCrear.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							Stock(auxiliar);
-							guardar(auxiliar);
-							combo.setCodigo(codigo);
-							combo.setNombre(textNombreCombo.getText());
-							combo.setPrecio((float) spnTotal.getValue());
-							Combo aux = new Combo(temporal,textNombreCombo.getText(),codigo, (float)spnTotal.getValue(),(int)spnStock.getValue());
-							Tienda.getInstance().getMisCombos().add(aux);
-							JOptionPane.showMessageDialog(null, "Modificación Exitosa", "Información", JOptionPane.INFORMATION_MESSAGE);
+							Stock(combo);
+							guardar(combo, combo);
+							JOptionPane.showMessageDialog(null, "Registro Exitoso", "AVISO", JOptionPane.INFORMATION_MESSAGE);
 							//Reset();
-							dispose();
+							load(0);
+							load2(combo);
 						}
 					});
-					btnCrear.setEnabled(false);
 					buttonPane.add(btnCrear);
 				}
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
 		}
-
-		load(0,componentes);
+		spnTotal.setValue(copy.getPrecio());
+		textNombreCombo.setText(copy.getNombre());
+		textSerial.setText(copy.getCodigo());
+		spnStock.setValue(copy.getStock());
+		spnSubtotal.setValue((copy.getPrecio() * 0.1) + copy.getPrecio());
+		load(0);
+		load2(combo);
 		pnlAgregar.setVisible(false);
 		pnlRemover.setVisible(false);
 	}
 
-	public void load(int index, ArrayList<Componente> copia) {
+	public void load(int index) {
 		model.setRowCount(0);
 		rows = new Object[model.getColumnCount()];
 		if(index == 0){
-			for (Componente aux : copia) {
+			for (Componente aux : temporal) {
 
 				rows[0] = aux.getNumSerie();
 				rows[1] = aux.getMarca();
@@ -503,7 +506,7 @@ public class ModCombo extends JDialog {
 		}
 
 		if(index == 1){
-			for (Componente aux : copia) {
+			for (Componente aux : temporal) {
 				if(aux instanceof Motherboard){
 					rows[0] = aux.getNumSerie();
 					rows[1] = aux.getMarca();
@@ -516,7 +519,7 @@ public class ModCombo extends JDialog {
 			}	
 		}
 		if(index == 2){
-			for (Componente aux : copia) {
+			for (Componente aux : temporal) {
 				if(aux instanceof Micro){
 					rows[0] = aux.getNumSerie();
 					rows[1] = aux.getMarca();
@@ -529,7 +532,7 @@ public class ModCombo extends JDialog {
 			}	
 		}
 		if(index==3){
-			for (Componente aux : copia) {
+			for (Componente aux : temporal) {
 				if(aux instanceof MemoriaRam){
 					rows[0] = aux.getNumSerie();
 					rows[1] = aux.getMarca();
@@ -542,7 +545,7 @@ public class ModCombo extends JDialog {
 			}	
 		}
 		if(index==4){
-			for (Componente aux :copia) {
+			for (Componente aux :temporal) {
 				if(aux instanceof DiscoDuro){
 					rows[0] = aux.getNumSerie();
 					rows[1] = aux.getMarca();
@@ -556,18 +559,18 @@ public class ModCombo extends JDialog {
 		}
 	}
 
-	public void load2(Combo auxiliar){
+	public void load2(Combo combo){
 		float precio = (Float)spnTotal.getValue();
 		int stock = (int) spnStock.getValue();
-		auxiliar.setNombre(textNombreCombo.getText());
-		auxiliar.setCodigo(textSerial.getText());
-		auxiliar.setPrecio(precio);
-		auxiliar.setStock(stock);
+		combo.setNombre(textNombreCombo.getText());
+		combo.setCodigo(textSerial.getText());
+		combo.setPrecio(precio);
+		combo.setStock(stock);
 
 		model_1.setRowCount(0);
 		rows = new Object[model_1.getColumnCount()];
 
-		for (Componente aux :auxiliar.getMisComponentes()) {
+		for (Componente aux :combo.getMisComponentes()) {
 
 			rows[0] = aux.getNumSerie();
 			rows[1] = aux.getMarca();
@@ -593,18 +596,19 @@ public class ModCombo extends JDialog {
 	}
 
 
-	public void modTemporal(Componente sel, Combo copia) {
-		for (Componente componente : copia.getMisComponentes()) {
+	public boolean modTemporal(Componente sel, int temp) {
+		for (Componente componente : temporal) {
 			if (componente.getNumSerie().equalsIgnoreCase(sel.getNumSerie())) {
-				componente.setStock(sel.getStock());
-
+				componente.setStock(sel.getStock() + temp);
+				return true;
 			}
 		}
+		return false;
 	}
 
-	public void modCombo(String serial, int stock, Combo auxiliar) {
+	public void modCombo(String serial, int stock, Combo combo) {
 		float descuento = 0;
-		for (Componente componente : auxiliar.getMisComponentes()) {
+		for (Componente componente : combo.getMisComponentes()) {
 			if (componente.getNumSerie().equalsIgnoreCase(serial)) {
 				componente.setStock(stock);
 				spnSubtotal.setValue((Float.valueOf((Float) spnSubtotal.getValue()))+(componente.getPrecio() * stock));
@@ -614,10 +618,17 @@ public class ModCombo extends JDialog {
 			}
 		}
 	}
+	public void modOficial(String serial, int stock) {
+		for (Componente componente : temporal) {
+			if (componente.getNumSerie().equalsIgnoreCase(serial)) {
+				componente.setStock(stock);
+			}
+		}
+	}
 
-	public boolean existencia(Componente aux, int temp, Combo auxiliar) {
+	public boolean existencia(Componente aux, int temp, Combo combo) {
 		float descuento = 0;
-		for (Componente componente : auxiliar.getMisComponentes()) {
+		for (Componente componente : combo.getMisComponentes()) {
 			if (componente.getNumSerie().equalsIgnoreCase(aux.getNumSerie())) {
 				componente.setStock(componente.getStock()+temp);
 				spnSubtotal.setValue((Float.valueOf((Float) spnSubtotal.getValue()))+(componente.getPrecio() * temp));
@@ -632,13 +643,14 @@ public class ModCombo extends JDialog {
 
 	public void clean () {
 		spnAgregar.setValue(1);
+		//spnRemover.setModel(new SpinnerNumberModel(1, 1, selected_1.getStock(), 1));
 		btnAgregar.setEnabled(false);
 		btnRemover.setEnabled(false);
 	}
 
-	public Componente Buscar(String numSerie, Combo auxiliar) {
+	public Componente Buscar(String numSerie,Combo combo) {
 
-		for (Componente componente : auxiliar.getMisComponentes()) {
+		for (Componente componente : combo.getMisComponentes()) {
 			if (componente.getNumSerie().equalsIgnoreCase(numSerie)) {
 				return componente;
 			}
@@ -646,17 +658,15 @@ public class ModCombo extends JDialog {
 		return null;
 	}
 
-	public void remover(Componente aux, int control,int cant, Combo auxiliar) {
+	public void remover(Componente aux, int control,int cant, Combo combo) {
 		float descuento = 0;
-		for (Componente comp : auxiliar.getMisComponentes()) {
+		for (Componente comp : temporal) {
 			if (comp.getNumSerie().equalsIgnoreCase(aux.getNumSerie())) {
 				if (control == 1) {//Cuando no se removeran todos
-					comp.setStock(comp.getStock() + cant);
 					aux.setStock(aux.getStock() - cant);
 				}
 				if (control == 2) {//esto es para cuando se remueven todos
-					comp.setStock(comp.getStock() + aux.getStock());
-					auxiliar.getMisComponentes().remove(aux);
+					combo.getMisComponentes().remove(aux);
 
 				}
 			}
@@ -668,11 +678,11 @@ public class ModCombo extends JDialog {
 
 	}
 
-	public void Stock(Combo auxiliar) {//Esa funcion se llama al precionar el boton crear
+	public void Stock(Combo combo) {//Esa funcion se llama al precionar el boton crear
 		int stock = (int) spnStock.getValue();
 		int cant=0;
 		for (Componente comp: Tienda.getInstance().getMisComponentes()) {
-			for(Componente aux: auxiliar.getMisComponentes()) {
+			for(Componente aux: combo.getMisComponentes()) {
 				if (comp.getNumSerie().equalsIgnoreCase(aux.getNumSerie())) {
 					cant = aux.getStock();
 					if (comp.getStock() >= (cant*stock)) {
@@ -685,44 +695,73 @@ public class ModCombo extends JDialog {
 			}
 		}
 	}
-	
-	public Componente temporalByCodigo(String numSerie, Combo copia) {
 
-		for (Componente componente : copia.getMisComponentes()) {
+	public Componente temporalByCodigo(String numSerie) {
+
+		for (Componente componente : temporal) {
 			if (componente.getNumSerie().equalsIgnoreCase(numSerie)) {
 				return componente;
 			}
 		}
 		return null;
 	}
-	
-	public void guardar(Combo auxiliar) {
+
+	public void guardar(Combo combo, Combo sele) {
 		for (Componente comp: Tienda.getInstance().getMisComponentes()) {
-			for(Componente aux: auxiliar.getMisComponentes()) {
+			for(Componente aux: temporal) {
 				if (comp.getNumSerie().equalsIgnoreCase(aux.getNumSerie())) {
 					comp.setStock(aux.getStock());
 				}
 			}
 		}
+		//ArrayList<Componente> copia = sele.getMisComponentes();
+		combo.setCodigo(codigo);
+		combo.setNombre(textNombreCombo.getText());
+		combo.setPrecio((float) spnTotal.getValue());
+		sele = combo;
+
+
 	}
-	
+
 	/*public void Reset() {
 		textNombreCombo.setText(" ");
 		spnSubtotal.setValue(0.0);
 		spnTotal = new JSpinner();
 		spnTotal.setModel(new SpinnerNumberModel(new Float(0), new Float(0), null, new Float(1)));
-		misComponentes.clear();
 		spnStock.setValue(1);
-
+		codigo = ("CMB-"+ Tienda.getInstance().getMisCombos().size());
 	}*/
-	
-	
-	public ArrayList<Componente> copiar(Combo combo) throws CloneNotSupportedException {
-		ArrayList<Componente>misComponentes = new ArrayList<Componente>();
-		misComponentes = Combox.Locura(combo.getMisComponentes());
-		
-		return misComponentes;
+
+	public ArrayList<Componente> copiarListaProfunda(ArrayList<Componente> listaOriginal) {
+		ArrayList<Componente> listaCopia = new ArrayList<Componente>();
+		for (Componente c : listaOriginal) {
+			Componente copiaComponente = null;
+			try {
+				copiaComponente = (Componente) c.clone();
+			} catch (CloneNotSupportedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+			listaCopia.add(copiaComponente); 
+		}
+		return listaCopia;
 	}
+	
+	public void cargar(Combo comb) {
 		
+	}
+	
+	public void agregar(Componente aux,Combo combo, int control,int cant) {
+		for (Componente comp : combo.getMisComponentes()) {
+			if (comp.getNumSerie().equalsIgnoreCase(aux.getNumSerie())) {
+				if (control == 1) {//Cuando NO se removeran todos
+					aux.setStock(aux.getStock() - cant);
+				}
+				if (control == 2) {//esto es para cuando se remueven todos
+					temporal.remove(aux);
+				}
+			}
+		}
+	}
 
 }

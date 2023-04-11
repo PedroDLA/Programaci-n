@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 
 import logico.Tienda;
@@ -117,7 +118,7 @@ public class login extends JFrame {
 		panel.add(textField);
 		textField.setColumns(10);
 		
-		textField_1 = new JTextField();
+		textField_1 = new JPasswordField();
 		textField_1.setBounds(39, 128, 191, 20);
 		panel.add(textField_1);
 		textField_1.setColumns(10);

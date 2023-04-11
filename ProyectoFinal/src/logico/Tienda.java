@@ -128,10 +128,7 @@ public class Tienda implements Serializable {
 				copia.add((Combo) comb.clone());
 				
 			}
-		System.out.println(misCombos.size());
-		System.out.println("los mamagranossssssssssssssssssssss");
-		System.out.println(copia.size());
-		System.out.println("los mamagranossssssssssssssssssssss");
+	
 		return copia;
 	}
 	public Combo copiarCombo (Combo selec) throws CloneNotSupportedException {
@@ -164,7 +161,16 @@ public class Tienda implements Serializable {
 	            comp.setStock(componentes.getStock());
 	        }
 	    }
+	}	
+	public Combo CombobyCodigo(String serial) {
+		for(Combo comb : misCombos) {
+			if(comb.getCodigo().equalsIgnoreCase(serial)) {
+				return comb;
+			}
+		}
+		return null;
 	}
+	
 	public void guardarComponentesEnArchivo() {
 		try {
 			File archivo = new File("Miscomponentes.dat");
@@ -175,7 +181,6 @@ public class Tienda implements Serializable {
 
 				oos.writeObject(componente);
 			}
-
 			oos.close();
 			fos.close();
 			System.out.println("Se ha guardado el ArrayList misComponentes en el archivo " + archivo.getPath());
@@ -197,10 +202,10 @@ public class Tienda implements Serializable {
 			}
 			ois.close();
 			fis.close();
-			System.out
+		System.out
 					.println("Se han cargado " + numComponentes + " componentes desde el archivo " + archivo.getPath());
 		} catch (Exception e) {
-			System.out.println("Ha ocurrido un error al cargar los componentes desde el archivo: " + e.getMessage());
+		System.out.println("Ha ocurrido un error al cargar los componentes desde el archivo: " + e.getMessage());
 		}
 	}
 
