@@ -143,7 +143,15 @@ public class Tienda {
 	        }
 	    }
 	}
-
+	
+	public Combo CombobyCodigo(String serial) {
+		for(Combo comb : misCombos) {
+			if(comb.getCodigo().equalsIgnoreCase(serial)) {
+				return comb;
+			}
+		}
+		return null;
+	}
 
 	
 	

@@ -461,7 +461,6 @@ public class FacturarComplejo extends JDialog {
 		componentesFactura.clear();
 		combosFactura.clear();
 		load();
-		
 	}
 
 	public static void load() {

@@ -234,8 +234,12 @@ public class Combox extends JDialog {
 							modCombo(selected_1.getNumSerie(),temp);
 						}
 
-						selected.setStock(selected.getStock() - temp);
-						modTemporal(selected);
+						if (temp < selected.getStock()) {
+							agregar(selected, 1, temp);
+						}
+						if (temp == selected.getStock()) {
+							agregar(selected, 2, temp);
+						}
 
 						pnlAgregar.setVisible(false);
 						btnAgregar.setVisible(true);
@@ -288,6 +292,14 @@ public class Combox extends JDialog {
 				btnAceptar_1.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						int temp = Integer.valueOf((Integer)spnRemover.getValue());
+						
+						boolean control = modTemporal(selected_1, temp);
+						
+						if (!control) {	
+							temporal.add(selected_1);
+							modOficial(selected.getNumSerie(),temp);
+						}
+						
 						if (temp < selected_1.getStock()) {
 							remover(selected_1, 1, temp);
 						}
@@ -593,13 +605,14 @@ public class Combox extends JDialog {
 	}
 
 
-	public void modTemporal(Componente sel) {
+	public boolean modTemporal(Componente sel, int temp) {
 		for (Componente componente : temporal) {
 			if (componente.getNumSerie().equalsIgnoreCase(sel.getNumSerie())) {
-				componente.setStock(sel.getStock());
-
+				componente.setStock(sel.getStock() + temp);
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public void modCombo(String serial, int stock) {
@@ -611,6 +624,13 @@ public class Combox extends JDialog {
 				descuento = (float) spnSubtotal.getValue();
 				descuento = (float) (descuento - (descuento * 0.1));
 				spnTotal.setValue(descuento);
+			}
+		}
+	}
+	public void modOficial(String serial, int stock) {
+		for (Componente componente : temporal) {
+			if (componente.getNumSerie().equalsIgnoreCase(serial)) {
+				componente.setStock(stock);
 			}
 		}
 	}
@@ -652,11 +672,9 @@ public class Combox extends JDialog {
 		for (Componente comp : temporal) {
 			if (comp.getNumSerie().equalsIgnoreCase(aux.getNumSerie())) {
 				if (control == 1) {//Cuando no se removeran todos
-					comp.setStock(comp.getStock() + cant);
 					aux.setStock(aux.getStock() - cant);
 				}
 				if (control == 2) {//esto es para cuando se remueven todos
-					comp.setStock(comp.getStock() + aux.getStock());
 					combo.getMisComponentes().remove(aux);
 
 				}
@@ -698,10 +716,14 @@ public class Combox extends JDialog {
 	}
 	
 	public void guardar() {
-		for (Componente comp: Tienda.getInstance().getMisComponentes()) {
+		ArrayList<Componente> copia = Tienda.getInstance().getMisComponentes();
+		for (Componente comp: copia) {
 			for(Componente aux: temporal) {
 				if (comp.getNumSerie().equalsIgnoreCase(aux.getNumSerie())) {
 					comp.setStock(aux.getStock());
+					if (comp.getStock() == 0) {
+						Tienda.getInstance().getMisComponentes().remove(comp);
+					}
 				}
 			}
 		}
@@ -709,12 +731,11 @@ public class Combox extends JDialog {
 	
 	public void Reset() {
 		textNombreCombo.setText(" ");
-		spnSubtotal.setValue(0.0);
-		spnTotal = new JSpinner();
-		spnTotal.setModel(new SpinnerNumberModel(new Float(0), new Float(0), null, new Float(1)));
+		spnSubtotal.setValue(0);
+		//spnTotal.setValue(0);
 		misComponentes.clear();
 		spnStock.setValue(1);
-
+		codigo = ("CMB-"+ Tienda.getInstance().getMisCombos().size());
 	}
 	
 	
@@ -727,14 +748,17 @@ public class Combox extends JDialog {
 		return copia;
 	}
 	
-	public static ArrayList<Componente> Locura(ArrayList<Componente>misComponentes) throws CloneNotSupportedException{
-
-		ArrayList<Componente> copia = new ArrayList<Componente>(misComponentes.size());
-		for (Componente comp : misComponentes) {
-			copia.add((Componente) comp.clone());
+	public void agregar(Componente aux, int control,int cant) {
+		for (Componente comp : combo.getMisComponentes()) {
+			if (comp.getNumSerie().equalsIgnoreCase(aux.getNumSerie())) {
+				if (control == 1) {//Cuando NO se removeran todos
+					aux.setStock(aux.getStock() - cant);
+				}
+				if (control == 2) {//esto es para cuando se remueven todos
+					temporal.remove(aux);
+				}
+			}
 		}
-		return copia;
 	}
-		
-
+	
 }
