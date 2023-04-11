@@ -128,6 +128,23 @@ public class Tienda {
 	public void agregarFactura(Factura nuevaFactura) {
 		misFacturas.add(nuevaFactura);
 	}
+
+	public void actualizarFacturas(ArrayList<Componente> temporal) {
+	    for(Componente componentes : temporal) {
+	        int index = misComponentes.indexOf(componentes);
+	        System.out.println(index);
+	        if (index >= 0) {
+	        	System.out.println("-----------------------------------------------");
+	            Componente comp = misComponentes.get(index);
+	            System.out.println("-----------------------------------------------");
+	            System.out.println(componentes.getStock());
+	            System.out.println(comp.getStock()); 
+	            comp.setStock(componentes.getStock());
+	        }
+	    }
+	}
+
+
 	
 	
 	/*

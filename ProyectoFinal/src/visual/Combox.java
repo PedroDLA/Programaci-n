@@ -166,6 +166,7 @@ public class Combox extends JDialog {
 				table.setModel(model);
 
 			}
+
 		}
 
 
@@ -180,9 +181,10 @@ public class Combox extends JDialog {
 						panel.setComponentZOrder(pnlAgregar, 0);
 					}
 					else {
-						JOptionPane.showMessageDialog(null, "Stock Vac�o!!!", "AVISO", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Stock Vacï¿½o!!!", "AVISO", JOptionPane.INFORMATION_MESSAGE);
 
 					}
+
 
 				}
 			});
@@ -266,12 +268,14 @@ public class Combox extends JDialog {
 			pnlRemover.setBounds(834, 198, 229, 172);
 			panel.add(pnlRemover);
 			{
+
 				txtpnCuntosArtculosDeseas = new JTextPane();
 				txtpnCuntosArtculosDeseas.setText("Cu\u00E1ntos art\u00EDculos deseas remover del combo?\r\n\r\nNo deben exceder la cantidad actual en existencia!");
 				txtpnCuntosArtculosDeseas.setEditable(false);
 				txtpnCuntosArtculosDeseas.setBackground(SystemColor.info);
 				txtpnCuntosArtculosDeseas.setBounds(12, 32, 179, 86);
 				pnlRemover.add(txtpnCuntosArtculosDeseas);
+
 			}
 			{
 				spnRemover = new JSpinner();
@@ -676,7 +680,7 @@ public class Combox extends JDialog {
 						comp.setStock(comp.getStock() - (cant*stock));
 					}
 					else if(comp.getStock() < (cant*stock)) {
-						JOptionPane.showMessageDialog(null, "No cuenta con Stock suficiente de los art�culos solicitados", "AVISO", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "No cuenta con Stock suficiente de los artículos solicitados", "AVISO", JOptionPane.INFORMATION_MESSAGE);
 					}
 				}
 			}
