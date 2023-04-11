@@ -1,8 +1,10 @@
 package logico;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Combo implements Cloneable {
+public class Combo implements Cloneable, Serializable {
+	private static final long serialVersionUID = -3159306032366986253L;
 	private ArrayList<Componente> misComponentes;
 	private String nombre;
 	private String codigo;
